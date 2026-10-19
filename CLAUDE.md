@@ -10,7 +10,7 @@
 
 - `main`에 푸시하면 Cloudflare Pages(프로젝트 `codespaces-blank`)가 자동으로 배포합니다. 빌드 단계는 없고, 저장소 루트가 그대로 공개됩니다. 그래서 이 파일도 `/CLAUDE.md` 주소로 누구나 볼 수 있으니 비밀 정보는 넣지 않습니다.
 - 배포 결과는 커밋의 체크 런으로 확인합니다.
-  `gh api repos/koochungkyung-ui/lucky-lotto/commits/<sha>/check-runs` → `cloudflare-workers-and-pages` 항목
+  `gh api repos/koochungkyung-ui/lucky-lotto/commits/<sha>/check-runs` → 이름이 `Cloudflare Pages`인 항목의 `status`·`conclusion`(완료되면 `completed success`)
 - GitHub Pages는 꺼 두었습니다. Cloudflare만 씁니다.
 - Codespace에 기본으로 들어 있는 `GITHUB_TOKEN`으로는 이 저장소에 푸시만 할 수 있습니다. 저장소 설정(공개 여부, Pages 등)은 바꿀 수 없으니, 그런 작업은 사용자에게 GitHub 웹 화면에서 하도록 안내합니다.
 - 커밋, 푸시, 배포는 사용자가 요청할 때만 합니다.
@@ -62,6 +62,12 @@
 - 4개 언어 내용이 HTML에 모두 들어 있고(`<article class="lang-block" lang="..">`), `page.js`가 앱과 같은 `localStorage` 값(`app-lang`, `app-theme`)을 읽어서 한 언어만 보여 줍니다. 이 페이지들은 `I18N` 사전을 쓰지 않으므로, 문구를 고칠 때는 4개 `article`을 모두 고칩니다.
 - 앱에서는 📮 제휴 탭 아래와 하단 푸터에서 링크합니다. 두 페이지에서 앱으로 갈 때 `./#contact`로 링크하면 제휴 탭이 바로 열립니다(해시 이름 + `-card`인 탭을 엽니다).
 - 앱에 새 기능을 넣거나 보내는 데이터가 바뀌면 두 페이지 내용도 맞춰 고칩니다(특히 개인정보처리방침의 수집 항목과 처리 업체).
+
+## Google AdSense
+
+- 게시자 ID는 `ca-pub-9392454658951872`입니다. 세 HTML(`index.html`, `about.html`, `privacy.html`)의 `<head>`에 `google-adsense-account` 메타 태그와 `adsbygoogle.js` 스크립트가 있고, 루트에 `ads.txt`가 있습니다. 새 HTML 페이지를 만들면 같은 두 줄을 넣습니다.
+- `sw.js`는 다른 도메인 요청(글꼴 제외)을 건드리지 않으므로 광고 스크립트는 캐시되지 않습니다.
+- 페이지 전체가 스크롤되지 않는 구조(`100dvh`)라서, 자동 광고를 켜면 광고가 화면을 가리거나 레이아웃을 밀어낼 수 있습니다. 켠 뒤에는 폰 폭에서 꼭 확인합니다.
 
 ## 제휴 문의 폼 (📮 탭)
 
