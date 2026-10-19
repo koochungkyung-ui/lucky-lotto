@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://codespaces-blank-d5v.pages.dev/sitemap.xml
+Sitemap: https://cloverpick.app/sitemap.xml
