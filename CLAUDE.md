@@ -20,8 +20,8 @@
 
 - 사용자가 IDE에 `index.html`을 열어 둔 채 채팅을 하므로, 파일에 엉뚱한 글자가 섞일 수 있습니다. 실제로 CSS 주석 뒤에 `네`가 들어가 배경 규칙 전체가 무시되고 화면이 가려진 적이 있습니다.
   → 커밋 전에 `git diff` 전체를 읽고, 바뀐 줄이 모두 의도한 것인지 확인합니다.
-- 스크립트 문법 검사:
-  `sed -n '/<script>/,/<\/script>/p' index.html | sed '1d;$d' > /tmp/check.js && node --check /tmp/check.js`
+- 스크립트 문법 검사(`<head>`의 Google 태그와 본문 스크립트를 따로 검사):
+  `awk '/^  <script>$/{f=1;n++;next} /^  <\/script>$/{f=0;next} f{print > ("/tmp/check" n ".js")}' index.html && for j in /tmp/check[0-9].js; do node --check "$j"; done`
 - 화면은 폰 폭(320·360·390px)으로 확인합니다. 헤드리스 Chromium(Playwright)으로 스크린샷을 찍으면 됩니다. Codespace에서 처음 쓸 때는 시스템 라이브러리 설치가 필요합니다(`npx playwright install chromium` 실행 시 안내가 나옵니다).
 
 ## index.html 구조
@@ -69,6 +69,11 @@
 - 게시자 ID는 `ca-pub-3330288431208764`입니다(koock4u 계정. 유튜브 채널 "편의템"도 이 계정에 연결. 처음 쓴 `pub-9392454658951872`는 중복 계정이라 2026-10-19에 해지함). 원래 "YouTube용 애드센스"만 쓰던 계정이라 사이트 광고에는 애드센스 업그레이드가 필요합니다. 모든 HTML(앱, 소개·개인정보, 글 페이지 3개)의 `<head>`에 `google-adsense-account` 메타 태그와 `adsbygoogle.js` 스크립트가 있고, 루트에 `ads.txt`가 있습니다. 새 HTML 페이지를 만들면 같은 두 줄을 넣습니다.
 - `sw.js`는 다른 도메인 요청(글꼴 제외)을 건드리지 않으므로 광고 스크립트는 캐시되지 않습니다.
 - 페이지 전체가 스크롤되지 않는 구조(`100dvh`)라서, 자동 광고를 켜면 광고가 화면을 가리거나 레이아웃을 밀어낼 수 있습니다. 켠 뒤에는 폰 폭에서 꼭 확인합니다.
+
+## Google 애널리틱스
+
+- 측정 ID는 `G-439VK8ZWR3`입니다. 모든 HTML의 `<head>` 맨 위(`<head>` 바로 다음)에 Google 태그(gtag.js)가 있습니다. 새 HTML 페이지에도 넣습니다.
+- 개인정보처리방침 4번(Google LLC 항목)과 5번(광고·방문 통계와 쿠키)에 애널리틱스 사용과 차단 방법을 적어 두었습니다. 추적 방식을 바꾸면 4개 언어를 모두 고칩니다.
 
 ## 검색 등록
 
