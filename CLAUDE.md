@@ -65,9 +65,16 @@
 
 ## Google AdSense
 
-- 게시자 ID는 `ca-pub-9392454658951872`입니다. 세 HTML(`index.html`, `about.html`, `privacy.html`)의 `<head>`에 `google-adsense-account` 메타 태그와 `adsbygoogle.js` 스크립트가 있고, 루트에 `ads.txt`가 있습니다. 새 HTML 페이지를 만들면 같은 두 줄을 넣습니다.
+- 게시자 ID는 `ca-pub-9392454658951872`입니다. 모든 HTML(앱, 소개·개인정보, 글 페이지 3개)의 `<head>`에 `google-adsense-account` 메타 태그와 `adsbygoogle.js` 스크립트가 있고, 루트에 `ads.txt`가 있습니다. 새 HTML 페이지를 만들면 같은 두 줄을 넣습니다.
 - `sw.js`는 다른 도메인 요청(글꼴 제외)을 건드리지 않으므로 광고 스크립트는 캐시되지 않습니다.
 - 페이지 전체가 스크롤되지 않는 구조(`100dvh`)라서, 자동 광고를 켜면 광고가 화면을 가리거나 레이아웃을 밀어낼 수 있습니다. 켠 뒤에는 폰 폭에서 꼭 확인합니다.
+
+## 글 페이지 (가이드)
+
+- `lotto-odds.html`(로또 6/45 확률·등수·세금), `world-lotteries.html`(해외 복권 4종 비교), `tarot-cards.html`(메이저 아르카나 22장 의미)는 애드센스 심사용으로 만든 글 페이지입니다. 구조와 언어 처리는 소개 페이지와 같습니다(`page.css`, `page.js`, 4개 `article`).
+- 앱에서는 로또 탭과 타로 탭 맨 아래(`.guide-links`), 하단 푸터에서 링크합니다. 글 페이지 5개(소개·개인정보 포함)의 푸터에도 서로 링크가 있습니다.
+- 타로 카드 이름과 정방향·역방향 문구는 앱 `I18N.<lang>.data.tarot`와 같게 맞췄습니다. 번호 만드는 규칙(`generateTarotLottoNumbers`)이나 복권 규칙을 바꾸면 이 글들도 함께 고칩니다.
+- 새 페이지를 만들면 `sitemap.xml`에 `.html` 없는 주소로 추가합니다(`robots.txt`가 이 사이트맵을 가리킵니다).
 
 ## 제휴 문의 폼 (📮 탭)
 

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ko" data-lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로또 6/45 당첨 확률과 등수 | 행운의 로또 번호 추첨기</title>
+  <meta name="description" content="로또 6/45 등수별 당첨 조건과 확률, 1등 확률 계산법, 당첨금이 나뉘는 방식, 세금과 지급 기한, 번호 고르기에 대한 흔한 오해를 정리했습니다.">
+  <link rel="canonical" href="https://codespaces-blank-d5v.pages.dev/lotto-odds">
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-9392454658951872">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9392454658951872"
+     crossorigin="anonymous"></script>
+  <!-- 설치형 웹앱(PWA): 홈 화면 아이콘과 앱 정보 -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#6366f1">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="/icons/icon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="행운 로또">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="page.css">
+</head>
+<body>
+
+  <div class="page-top">
+    <a class="back-link" href="./">
+      <span class="lang-inline" lang="ko">← 앱으로</span><span class="lang-inline" lang="en">← Back to app</span><span class="lang-inline" lang="zh">← 返回应用</span><span class="lang-inline" lang="ja">← アプリへ</span>
+    </a>
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button class="lang-btn" data-lang="ko" lang="ko" aria-label="한국어">한</button>
+      <button class="lang-btn" data-lang="en" lang="en" aria-label="English">EN</button>
+      <button class="lang-btn" data-lang="zh" lang="zh" aria-label="中文">中</button>
+      <button class="lang-btn" data-lang="ja" lang="ja" aria-label="日本語">日</button>
+    </div>
+  </div>
+
+  <main class="doc">
+
+    <!-- 한국어 -->
+    <article class="lang-block" lang="ko" data-title="로또 6/45 당첨 확률과 등수 | 행운의 로또 번호 추첨기">
+      <h1>🎱 로또 6/45 당첨 확률과 등수</h1>
+      <p class="lead">로또 6/45는 1부터 45까지의 숫자 중 6개를 고르는 한국의 대표 복권입니다. 등수별 당첨 조건과 확률, 당첨금이 나뉘는 방식, 번호를 고를 때 자주 듣는 이야기가 사실인지 정리했습니다.</p>
+      <p class="meta">2026년 10월 기준으로 정리했습니다. 판매·지급 규정은 바뀔 수 있으니 최신 내용은 동행복권 공식 홈페이지에서 확인해 주세요.</p>
+
+      <h2>로또 6/45는 이렇게 진행돼요</h2>
+      <ul>
+        <li>1게임에 1,000원이고, 1부터 45까지의 숫자 중 6개를 고릅니다. 직접 고르는 '수동'과 기계가 골라 주는 '자동'이 있습니다.</li>
+        <li>추첨은 매주 토요일 저녁 생방송으로 진행합니다. 공 6개를 먼저 뽑아 당첨 번호로 정하고, 마지막으로 1개를 더 뽑아 보너스 번호로 정합니다.</li>
+        <li>보너스 번호는 2등을 가릴 때만 씁니다.</li>
+        <li>한 번에 살 수 있는 금액은 10만 원까지이고, 인터넷 구매는 한 주에 5,000원까지입니다. 만 19세 이상만 살 수 있습니다.</li>
+      </ul>
+
+      <h2>등수별 당첨 조건과 확률</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>등수</th><th>당첨 조건</th><th>확률</th><th>당첨금</th></tr></thead>
+          <tbody>
+            <tr><td>1등</td><td>6개 모두 일치</td><td>8,145,060분의 1</td><td>1~3등 몫의 75%를 1등끼리 나눔</td></tr>
+            <tr><td>2등</td><td>5개 + 보너스 번호 일치</td><td>1,357,510분의 1</td><td>1~3등 몫의 12.5%를 2등끼리 나눔</td></tr>
+            <tr><td>3등</td><td>5개 일치</td><td>35,724분의 1</td><td>1~3등 몫의 12.5%를 3등끼리 나눔</td></tr>
+            <tr><td>4등</td><td>4개 일치</td><td>733분의 1</td><td>50,000원 (고정)</td></tr>
+            <tr><td>5등</td><td>3개 일치</td><td>45분의 1</td><td>5,000원 (고정)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">확률은 반올림한 값입니다. 1등부터 5등까지 모두 합치면, 1게임이 어느 등수든 당첨될 확률은 약 42분의 1입니다.</p>
+
+      <h2>1등 확률은 이렇게 계산해요</h2>
+      <p>45개 숫자 중 6개를 순서 없이 고르는 방법의 수는 (45 × 44 × 43 × 42 × 41 × 40) ÷ (6 × 5 × 4 × 3 × 2 × 1) = 8,145,060가지입니다. 이 중 당첨 조합은 하나뿐이라서 1등 확률은 8,145,060분의 1입니다. 매주 1게임씩 산다면 1등이 한 번 나오기까지 평균 약 15만 6천 년이 걸리는 셈입니다.</p>
+      <p>2등은 당첨 번호 6개 중 5개를 맞히는 6가지 경우 각각에서, 나머지 1개가 보너스 번호여야 합니다. 그래서 6 ÷ 8,145,060 = 1,357,510분의 1입니다. 3등은 나머지 1개가 당첨 번호도 보너스 번호도 아닌 38개 중 하나이면 되므로 6 × 38 = 228가지, 약 35,724분의 1입니다.</p>
+
+      <h2>당첨금은 이렇게 나뉘어요</h2>
+      <ul>
+        <li>판매액의 50%가 당첨금으로 쓰입니다. 나머지는 복권기금(공익사업)과 판매·운영 비용 등으로 쓰입니다.</li>
+        <li>당첨금에서 4등(5만 원)과 5등(5천 원)의 고정 금액을 먼저 지급합니다.</li>
+        <li>남은 금액을 1등 75%, 2등 12.5%, 3등 12.5%로 나누고, 같은 등수 당첨자끼리 똑같이 나눕니다. 그래서 1등 당첨금은 회차마다, 당첨자 수에 따라 크게 달라집니다.</li>
+        <li>1등 당첨자가 없으면 1등 몫은 다음 회차로 넘어갑니다(이월).</li>
+        <li>1,000원짜리 1게임을 사면 평균적으로 돌아오는 금액은 약 500원입니다. 평균으로 보면 복권은 늘 손해이므로, 재미로 즐기는 정도가 알맞습니다.</li>
+      </ul>
+
+      <h2>세금과 지급 기한</h2>
+      <ul>
+        <li>당첨금이 200만 원 이하이면 세금이 없습니다.</li>
+        <li>200만 원을 넘으면 3억 원까지는 22%, 3억 원을 넘는 부분은 33%의 세금(소득세와 지방소득세)을 뗍니다.</li>
+        <li>4·5등은 복권 판매점에서도 받을 수 있고, 1~3등은 NH농협은행에서 받습니다.</li>
+        <li>당첨금은 지급 개시일부터 1년 안에 받아야 합니다. 기한이 지나면 복권기금으로 들어갑니다.</li>
+      </ul>
+
+      <h2>자주 듣는 이야기, 사실일까요?</h2>
+      <ul>
+        <li><strong>"자주 나온 번호가 또 나온다"</strong>: 아닙니다. 추첨은 매번 따로 이루어져서, 지난 회차 결과가 다음 회차에 영향을 주지 않습니다. 모든 조합의 확률은 매주 똑같습니다.</li>
+        <li><strong>"오래 안 나온 번호가 나올 때가 됐다"</strong>: 이것도 아닙니다. 이런 생각을 '도박사의 오류'라고 부릅니다.</li>
+        <li><strong>"자동보다 수동이 잘 된다(또는 그 반대)"</strong>: 확률은 같습니다. 당첨자 중 자동·수동 비율이 다른 것은 그 방식으로 산 사람이 더 많기 때문입니다.</li>
+        <li><strong>"1, 2, 3, 4, 5, 6 같은 번호는 절대 안 나온다"</strong>: 다른 조합과 확률이 똑같습니다. 다만 이런 번호나 생일(1~31) 위주의 번호는 많은 사람이 고르기 때문에, 당첨되면 여러 명이 나눠 가져서 1인당 당첨금이 줄어들 수 있습니다.</li>
+      </ul>
+      <p>결국 당첨 확률을 높이는 방법은 없습니다. 고르는 방법에 따라 달라지는 건 '당첨됐을 때 다른 사람과 나눌 가능성' 정도입니다. 이 사이트의 로또 탭이 번호를 완전히 무작위로 뽑는 것도 이 때문입니다.</p>
+
+      <h2>건전하게 즐겨요</h2>
+      <p>복권은 여윳돈으로, 즐길 수 있는 만큼만 사세요. 도박 문제로 고민된다면 한국도박문제예방치유원 상담전화 ☎ 1336에서 도움을 받을 수 있습니다.</p>
+      <p><a href="./#lotto">🍀 앱에서 번호 뽑아 보기</a> · <a href="world-lotteries.html">🌍 해외 복권 규칙 비교</a> · <a href="https://www.dhlottery.co.kr/" target="_blank" rel="noopener noreferrer">동행복권 공식 홈페이지</a></p>
+    </article>
+
+    <!-- English -->
+    <article class="lang-block" lang="en" data-title="Lotto 6/45 Odds and Prize Tiers | Lucky Lotto Picker">
+      <h1>🎱 Lotto 6/45 Odds and Prize Tiers</h1>
+      <p class="lead">Lotto 6/45 is Korea's best-known lottery: you pick 6 numbers from 1 to 45. Here's how each prize tier works, what the odds are, how the prize money is split, and whether common number-picking tips hold up.</p>
+      <p class="meta">Up to date as of October 2026. Rules for sales and payouts can change, so please check the official Dong Haeng Lottery website for the latest details.</p>
+
+      <h2>How Lotto 6/45 works</h2>
+      <ul>
+        <li>One game costs ₩1,000. You pick 6 numbers from 1 to 45, either yourself (manual) or by letting the machine choose (auto).</li>
+        <li>The draw is broadcast live every Saturday evening. Six balls are drawn as the winning numbers, then one more is drawn as the bonus number.</li>
+        <li>The bonus number only matters for 2nd prize.</li>
+        <li>You can spend up to ₩100,000 per purchase, and up to ₩5,000 a week online. You must be 19 or older to buy.</li>
+      </ul>
+
+      <h2>Prize tiers and odds</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Prize</th><th>To win</th><th>Odds</th><th>Prize money</th></tr></thead>
+          <tbody>
+            <tr><td>1st</td><td>Match all 6</td><td>1 in 8,145,060</td><td>75% of the top-three pool, shared by 1st-prize winners</td></tr>
+            <tr><td>2nd</td><td>Match 5 + bonus</td><td>1 in 1,357,510</td><td>12.5% of the pool, shared by 2nd-prize winners</td></tr>
+            <tr><td>3rd</td><td>Match 5</td><td>1 in 35,724</td><td>12.5% of the pool, shared by 3rd-prize winners</td></tr>
+            <tr><td>4th</td><td>Match 4</td><td>1 in 733</td><td>₩50,000 (fixed)</td></tr>
+            <tr><td>5th</td><td>Match 3</td><td>1 in 45</td><td>₩5,000 (fixed)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Odds are rounded. Adding up all five tiers, the chance that one game wins any prize is about 1 in 42.</p>
+
+      <h2>How the jackpot odds are calculated</h2>
+      <p>The number of ways to choose 6 numbers from 45, ignoring order, is (45 × 44 × 43 × 42 × 41 × 40) ÷ (6 × 5 × 4 × 3 × 2 × 1) = 8,145,060. Only one of those combinations wins, so the jackpot odds are 1 in 8,145,060. If you bought one game every week, you would wait about 156,000 years on average for a single jackpot.</p>
+      <p>For 2nd prize, you need 5 of the 6 winning numbers (6 possible ways), and your sixth number must be the bonus number: 6 ÷ 8,145,060 = 1 in 1,357,510. For 3rd prize, your sixth number can be any of the 38 numbers that are neither winning nor bonus numbers: 6 × 38 = 228 ways, or about 1 in 35,724.</p>
+
+      <h2>How the prize money is split</h2>
+      <ul>
+        <li>50% of ticket sales goes to prizes. The rest goes to the Lottery Fund (public causes) and to sales and operating costs.</li>
+        <li>The fixed 4th prize (₩50,000) and 5th prize (₩5,000) are paid out first.</li>
+        <li>What's left is split 75% to 1st, 12.5% to 2nd and 12.5% to 3rd, then shared equally among the winners in each tier. That's why the jackpot amount changes a lot from week to week, depending on how many people win.</li>
+        <li>If nobody wins 1st prize, the jackpot rolls over to the next draw.</li>
+        <li>On average, a ₩1,000 game pays back about ₩500. Over time the lottery always costs more than it pays, so it's best enjoyed just for fun.</li>
+      </ul>
+
+      <h2>Taxes and claiming a prize</h2>
+      <ul>
+        <li>Prizes of ₩2 million or less are tax-free.</li>
+        <li>Above ₩2 million, 22% tax (income tax plus local income tax) is withheld on prizes up to ₩300 million, and 33% on the part above ₩300 million.</li>
+        <li>4th and 5th prizes can be claimed at lottery retailers; 1st to 3rd prizes are paid by NH NongHyup Bank.</li>
+        <li>Prizes must be claimed within one year of the payout start date. Unclaimed prizes go to the Lottery Fund.</li>
+      </ul>
+
+      <h2>Common beliefs: true or false?</h2>
+      <ul>
+        <li><strong>"Numbers that came up often will come up again."</strong> False. Each draw is independent, so past results have no effect on the next draw. Every combination has the same chance every week.</li>
+        <li><strong>"A number that hasn't come up in a while is due."</strong> Also false. This is known as the gambler's fallacy.</li>
+        <li><strong>"Manual picks win more than auto picks (or the other way round)."</strong> The odds are the same. If one method has more winners, it's because more people bought tickets that way.</li>
+        <li><strong>"1, 2, 3, 4, 5, 6 will never come up."</strong> It has exactly the same chance as any other combination. But numbers like these, or picks based on birthdays (1–31), are very popular, so if they win, the prize is shared by more people and each winner gets less.</li>
+      </ul>
+      <p>In the end, nothing can raise your chance of winning. The only thing your choice affects is how likely you are to share a prize with others. That's why the Lotto tab on this site picks numbers completely at random.</p>
+
+      <h2>Play responsibly</h2>
+      <p>Play only with money you can afford to lose. If gambling is causing you problems, please reach out to a local support service.</p>
+      <p><a href="./#lotto">🍀 Pick numbers in the app</a> · <a href="world-lotteries.html">🌍 Compare US and European lotteries</a> · <a href="https://www.dhlottery.co.kr/" target="_blank" rel="noopener noreferrer">Dong Haeng Lottery (official site)</a></p>
+    </article>
+
+    <!-- 中文 -->
+    <article class="lang-block" lang="zh" data-title="乐透 6/45 中奖概率与奖级 | 幸运乐透选号器">
+      <h1>🎱 乐透 6/45 中奖概率与奖级</h1>
+      <p class="lead">乐透 6/45 是韩国最具代表性的彩票，从 1 到 45 中选出 6 个号码。本文整理了各奖级的中奖条件与概率、奖金的分配方式，以及选号时常听到的说法是否属实。</p>
+      <p class="meta">内容截至 2026 年 10 月。销售与兑奖规定可能变更，最新信息请以东行彩票（Dong Haeng Lottery）官方网站为准。</p>
+
+      <h2>乐透 6/45 的玩法</h2>
+      <ul>
+        <li>每注 1,000 韩元，从 1 到 45 中选 6 个号码。可以自己选（手动），也可以由机器选（自动）。</li>
+        <li>每周六晚上直播开奖。先摇出 6 个球作为中奖号码，最后再摇出 1 个作为特别号码。</li>
+        <li>特别号码只用于判定二等奖。</li>
+        <li>每次最多购买 10 万韩元，网上购买每周最多 5,000 韩元。年满 19 岁才能购买。</li>
+      </ul>
+
+      <h2>各奖级中奖条件与概率</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>奖级</th><th>中奖条件</th><th>概率</th><th>奖金</th></tr></thead>
+          <tbody>
+            <tr><td>一等奖</td><td>6 个全中</td><td>8,145,060 分之 1</td><td>一至三等奖奖金池的 75%，由一等奖得主均分</td></tr>
+            <tr><td>二等奖</td><td>中 5 个 + 特别号码</td><td>1,357,510 分之 1</td><td>奖金池的 12.5%，由二等奖得主均分</td></tr>
+            <tr><td>三等奖</td><td>中 5 个</td><td>35,724 分之 1</td><td>奖金池的 12.5%，由三等奖得主均分</td></tr>
+            <tr><td>四等奖</td><td>中 4 个</td><td>733 分之 1</td><td>50,000 韩元（固定）</td></tr>
+            <tr><td>五等奖</td><td>中 3 个</td><td>45 分之 1</td><td>5,000 韩元（固定）</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">概率为四舍五入后的数值。一至五等奖加起来，每注中任意奖级的概率约为 42 分之 1。</p>
+
+      <h2>一等奖概率怎么算</h2>
+      <p>从 45 个号码中不计顺序选出 6 个，共有 (45 × 44 × 43 × 42 × 41 × 40) ÷ (6 × 5 × 4 × 3 × 2 × 1) = 8,145,060 种组合。其中只有一种是中奖组合，所以一等奖概率为 8,145,060 分之 1。如果每周买一注，平均大约要等 15 万 6 千年才能中一次一等奖。</p>
+      <p>二等奖需要在 6 个中奖号码中猜中 5 个（共 6 种情况），并且剩下的 1 个号码必须是特别号码，所以概率为 6 ÷ 8,145,060 = 1,357,510 分之 1。三等奖剩下的 1 个号码只要是既非中奖号码也非特别号码的 38 个号码之一即可，共 6 × 38 = 228 种，约 35,724 分之 1。</p>
+
+      <h2>奖金如何分配</h2>
+      <ul>
+        <li>销售额的 50% 用作奖金，其余用于彩票基金（公益事业）以及销售和运营费用等。</li>
+        <li>奖金中先支付固定金额的四等奖（5 万韩元）和五等奖（5 千韩元）。</li>
+        <li>剩余金额按一等奖 75%、二等奖 12.5%、三等奖 12.5% 分配，再由同一奖级的中奖者平分。因此一等奖奖金每期都不同，主要取决于中奖人数。</li>
+        <li>如果没有人中一等奖，一等奖奖金将滚入下一期。</li>
+        <li>花 1,000 韩元买一注，平均能拿回约 500 韩元。从平均来看彩票总是亏的，当作娱乐就好。</li>
+      </ul>
+
+      <h2>税金与兑奖期限</h2>
+      <ul>
+        <li>奖金在 200 万韩元以下免税。</li>
+        <li>超过 200 万韩元时，3 亿韩元以内的部分扣 22%，超过 3 亿韩元的部分扣 33%（所得税与地方所得税）。</li>
+        <li>四、五等奖可在彩票销售点兑领，一至三等奖在 NH 农协银行兑领。</li>
+        <li>奖金须在开始兑奖之日起 1 年内领取，逾期将归入彩票基金。</li>
+      </ul>
+
+      <h2>常听到的说法，是真的吗？</h2>
+      <ul>
+        <li><strong>"常出的号码还会再出"</strong>：不对。每次开奖互不影响，上一期的结果不会影响下一期。每周所有组合的概率都一样。</li>
+        <li><strong>"很久没出的号码该出了"</strong>：同样不对。这种想法被称为"赌徒谬误"。</li>
+        <li><strong>"手动比自动更容易中（或反过来）"</strong>：概率完全相同。中奖者中自动与手动的比例不同，只是因为用那种方式购买的人更多。</li>
+        <li><strong>"1、2、3、4、5、6 这样的号码绝对不会出"</strong>：它和其他组合的概率完全一样。只是这类号码或以生日（1～31）为主的号码很多人都会选，一旦中奖，要和更多人平分，每人拿到的奖金就会变少。</li>
+      </ul>
+      <p>归根结底，没有任何方法能提高中奖概率。选号方式能影响的，只是中奖时与他人平分奖金的可能性。这也是本站乐透页面完全随机选号的原因。</p>
+
+      <h2>理性购彩</h2>
+      <p>请只用闲钱、在能承受的范围内购买彩票。如果赌博给您带来困扰，请向当地的专业咨询机构寻求帮助。</p>
+      <p><a href="./#lotto">🍀 在应用中选号</a> · <a href="world-lotteries.html">🌍 比较美国与欧洲彩票</a> · <a href="https://www.dhlottery.co.kr/" target="_blank" rel="noopener noreferrer">东行彩票官方网站</a></p>
+    </article>
+
+    <!-- 日本語 -->
+    <article class="lang-block" lang="ja" data-title="ロト 6/45 の当選確率と等級 | ラッキーロト番号ジェネレーター">
+      <h1>🎱 ロト 6/45 の当選確率と等級</h1>
+      <p class="lead">ロト 6/45 は、1〜45 の数字から 6 個を選ぶ韓国の代表的な宝くじです。等級ごとの当選条件と確率、賞金の分け方、番号選びでよく聞く話が本当なのかをまとめました。</p>
+      <p class="meta">2026 年 10 月時点の情報です。販売・支払いの規定は変わることがあるため、最新の内容は東行宝くじ（Dong Haeng Lottery）の公式サイトでご確認ください。</p>
+
+      <h2>ロト 6/45 のしくみ</h2>
+      <ul>
+        <li>1 口 1,000 ウォンで、1〜45 の数字から 6 個を選びます。自分で選ぶ「手動」と、機械が選ぶ「自動」があります。</li>
+        <li>抽選は毎週土曜日の夜に生放送で行われます。まず 6 個の球を引いて当選番号とし、最後にもう 1 個引いてボーナス番号とします。</li>
+        <li>ボーナス番号は 2 等の判定にだけ使います。</li>
+        <li>1 回に買えるのは 10 万ウォンまで、インターネット購入は週 5,000 ウォンまでです。購入できるのは 19 歳以上です。</li>
+      </ul>
+
+      <h2>等級ごとの当選条件と確率</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>等級</th><th>当選条件</th><th>確率</th><th>賞金</th></tr></thead>
+          <tbody>
+            <tr><td>1 等</td><td>6 個すべて一致</td><td>8,145,060 分の 1</td><td>1〜3 等の賞金総額の 75% を 1 等当選者で分ける</td></tr>
+            <tr><td>2 等</td><td>5 個 + ボーナス番号が一致</td><td>1,357,510 分の 1</td><td>賞金総額の 12.5% を 2 等当選者で分ける</td></tr>
+            <tr><td>3 等</td><td>5 個一致</td><td>35,724 分の 1</td><td>賞金総額の 12.5% を 3 等当選者で分ける</td></tr>
+            <tr><td>4 等</td><td>4 個一致</td><td>733 分の 1</td><td>50,000 ウォン（固定）</td></tr>
+            <tr><td>5 等</td><td>3 個一致</td><td>45 分の 1</td><td>5,000 ウォン（固定）</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">確率は四捨五入した値です。1〜5 等をすべて合わせると、1 口がいずれかの等級に当たる確率は約 42 分の 1 です。</p>
+
+      <h2>1 等の確率の計算方法</h2>
+      <p>45 個の数字から順番を問わず 6 個を選ぶ方法は (45 × 44 × 43 × 42 × 41 × 40) ÷ (6 × 5 × 4 × 3 × 2 × 1) = 8,145,060 通りです。このうち当選の組み合わせは 1 つだけなので、1 等の確率は 8,145,060 分の 1 です。毎週 1 口ずつ買うと、1 等に 1 回当たるまで平均で約 15 万 6 千年かかる計算です。</p>
+      <p>2 等は、当選番号 6 個のうち 5 個を当てる 6 通りそれぞれで、残りの 1 個がボーナス番号である必要があります。そのため 6 ÷ 8,145,060 = 1,357,510 分の 1 です。3 等は、残りの 1 個が当選番号でもボーナス番号でもない 38 個のどれかであればよいので、6 × 38 = 228 通り、約 35,724 分の 1 です。</p>
+
+      <h2>賞金の分け方</h2>
+      <ul>
+        <li>売上の 50% が賞金に充てられます。残りは宝くじ基金（公益事業）や販売・運営費などに使われます。</li>
+        <li>賞金からまず 4 等（5 万ウォン）と 5 等（5 千ウォン）の固定額を支払います。</li>
+        <li>残りを 1 等 75%、2 等 12.5%、3 等 12.5% に分け、同じ等級の当選者で均等に分けます。そのため 1 等の賞金は回ごとに、当選者の数によって大きく変わります。</li>
+        <li>1 等の当選者がいない場合、1 等の賞金は次の回に繰り越されます（キャリーオーバー）。</li>
+        <li>1,000 ウォンの 1 口を買うと、平均して戻ってくる金額は約 500 ウォンです。平均で見ると宝くじは必ず損をするので、楽しむ程度がちょうどよいでしょう。</li>
+      </ul>
+
+      <h2>税金と受け取り期限</h2>
+      <ul>
+        <li>賞金が 200 万ウォン以下なら税金はかかりません。</li>
+        <li>200 万ウォンを超えると、3 億ウォンまでは 22%、3 億ウォンを超える部分は 33% の税金（所得税と地方所得税）が差し引かれます。</li>
+        <li>4・5 等は宝くじ売り場でも受け取れ、1〜3 等は NH 農協銀行で受け取ります。</li>
+        <li>賞金は支払い開始日から 1 年以内に受け取る必要があります。期限を過ぎると宝くじ基金に入ります。</li>
+      </ul>
+
+      <h2>よく聞く話、本当でしょうか？</h2>
+      <ul>
+        <li><strong>「よく出る番号はまた出る」</strong>：違います。抽選は毎回独立しているので、前の回の結果は次の回に影響しません。すべての組み合わせの確率は毎週同じです。</li>
+        <li><strong>「長く出ていない番号はそろそろ出る」</strong>：これも違います。このような考え方を「ギャンブラーの誤謬」と呼びます。</li>
+        <li><strong>「自動より手動のほうが当たる（またはその逆）」</strong>：確率は同じです。当選者の自動・手動の割合が違うのは、その方法で買った人が多いからです。</li>
+        <li><strong>「1、2、3、4、5、6 のような番号は絶対に出ない」</strong>：ほかの組み合わせとまったく同じ確率です。ただし、こうした番号や誕生日（1〜31）中心の番号は多くの人が選ぶため、当たると大勢で分けることになり、1 人あたりの賞金が少なくなることがあります。</li>
+      </ul>
+      <p>結局、当選確率を上げる方法はありません。選び方で変わるのは「当たったときにほかの人と分け合う可能性」くらいです。このサイトのロトタブが番号を完全にランダムに選ぶのもそのためです。</p>
+
+      <h2>節度を持って楽しみましょう</h2>
+      <p>宝くじは無理のない範囲で楽しみましょう。ギャンブルの問題でお悩みの場合は、お住まいの地域の相談窓口にご相談ください。</p>
+      <p><a href="./#lotto">🍀 アプリで番号を選ぶ</a> · <a href="world-lotteries.html">🌍 アメリカ・ヨーロッパの宝くじを比較</a> · <a href="https://www.dhlottery.co.kr/" target="_blank" rel="noopener noreferrer">東行宝くじ公式サイト</a></p>
+    </article>
+
+  </main>
+
+  <footer class="page-footer">
+    <a href="./">🍀 Lucky Lotto</a> · <a href="about.html"><span class="lang-inline" lang="ko">사이트 소개</span><span class="lang-inline" lang="en">About</span><span class="lang-inline" lang="zh">网站介绍</span><span class="lang-inline" lang="ja">サイト紹介</span></a> · <a href="privacy.html"><span class="lang-inline" lang="ko">개인정보처리방침</span><span class="lang-inline" lang="en">Privacy Policy</span><span class="lang-inline" lang="zh">隐私政策</span><span class="lang-inline" lang="ja">プライバシーポリシー</span></a><br>
+    <a href="lotto-odds.html"><span class="lang-inline" lang="ko">로또 확률</span><span class="lang-inline" lang="en">Lotto odds</span><span class="lang-inline" lang="zh">乐透概率</span><span class="lang-inline" lang="ja">ロトの確率</span></a> · <a href="world-lotteries.html"><span class="lang-inline" lang="ko">해외 복권 비교</span><span class="lang-inline" lang="en">World lotteries</span><span class="lang-inline" lang="zh">海外彩票比较</span><span class="lang-inline" lang="ja">海外宝くじ比較</span></a> · <a href="tarot-cards.html"><span class="lang-inline" lang="ko">타로 카드 의미</span><span class="lang-inline" lang="en">Tarot card meanings</span><span class="lang-inline" lang="zh">塔罗牌含义</span><span class="lang-inline" lang="ja">タロットの意味</span></a>
+  </footer>
+
+  <script src="page.js"></script>
+</body>
+</html>
