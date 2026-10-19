@@ -72,7 +72,7 @@
 
 ## 검색 등록
 
-- 네이버 서치어드바이저: 모든 HTML의 `<head>`에 `naver-site-verification` 메타 태그가 있습니다. 지우면 소유 확인이 풀립니다. 새 HTML 페이지에도 넣습니다.
+- 네이버 서치어드바이저: 모든 HTML의 `<head>`에 `naver-site-verification` 메타 태그가 2개 있습니다(`b0832…`는 예전 pages.dev 주소용, `e917a…`는 `cloverpick.app`용). 지우면 소유 확인이 풀립니다. 새 HTML 페이지에도 넣습니다.
 
 ## 글 페이지 (가이드)
 
