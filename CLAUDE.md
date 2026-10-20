@@ -111,3 +111,10 @@
 - `og-image.png`는 1200×630입니다. SVG를 resvg(`@resvg/resvg-js`)와 Pretendard 글꼴로 PNG로 바꿔서 만들었습니다.
 - Pretendard에는 한자·가나가 없어서, 이미지 안에서는 "KO · EN · ZH · JA" 같은 영문 표기를 씁니다.
 - 이미지를 바꾼 뒤 카카오톡에 예전 미리보기가 계속 나오면, [카카오 공유 디버거](https://developers.kakao.com/tool/debugger/sharing)에서 캐시를 초기화합니다.
+
+## 안드로이드 앱 (TWA)
+
+- 패키지 ID `app.cloverpick.lotto`(2026-10-20 확정, 바꿀 수 없음). Bubblewrap으로 사이트를 감싼 앱이라, 사이트를 배포하면 앱에도 바로 반영됩니다.
+- 앱 프로젝트와 서명 키는 저장소 **밖** `/workspaces/cloverpick-android`에 있습니다(저장소 루트는 공개되므로 키를 넣으면 안 됨). 비밀번호는 같은 폴더의 `KEYSTORE-PASSWORD.txt`. 키를 잃으면 원스토어·갤럭시 스토어 앱을 더는 업데이트할 수 없으니 사용자가 따로 백업해 둡니다.
+- 빌드 도구: `~/android-tools`(JDK 17, Android SDK), 설정은 `~/.bubblewrap/config.json`. 새로 빌드할 때는 `twa-manifest.json`의 `appVersionCode`(와 `appVersion`)를 올리고 `bubblewrap update` → `bubblewrap build`(비밀번호는 `BUBBLEWRAP_KEYSTORE_PASSWORD`, `BUBBLEWRAP_KEY_PASSWORD` 환경 변수).
+- `/.well-known/assetlinks.json`에 서명 키의 SHA-256 지문이 있어야 앱 위에 주소창이 안 보입니다. Google Play는 앱을 자체 키로 다시 서명하므로, Play Console의 "앱 서명 키 인증서" SHA-256도 이 파일에 추가합니다.
