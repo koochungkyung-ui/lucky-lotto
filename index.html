@@ -1267,11 +1267,12 @@
       flex: none;
       width: 100%;
     }
-    .qr-check-btn:focus-within {
+    .qr-alt-btn:focus-within {
       outline: 2px solid var(--primary);
       outline-offset: 2px;
     }
-    .qr-live-btn {
+    .qr-alt-btn {
+      position: relative;
       padding: 4px 8px;
       border: 0;
       background: none;
@@ -1282,7 +1283,7 @@
       text-underline-offset: 3px;
       cursor: pointer;
     }
-    .qr-live-btn:hover {
+    .qr-alt-btn:hover {
       color: var(--primary);
     }
     .btn-sub[hidden] {
@@ -2112,13 +2113,15 @@
         </div>
 
         <!-- 한국 로또 용지 QR로 당첨 확인 (한국 로또를 골랐을 때만 보임).
-             기본 버튼은 폰 기본 카메라 앱을 바로 연다(초점이 확실함). 사이트 안 실시간 카메라는 아래 보조 버튼 -->
+             기본 버튼은 사이트 안 실시간 카메라, 아래 보조 버튼은 폰 기본 카메라 앱으로 찍어서 확인 -->
         <div class="qr-check-wrap" id="qr-check-wrap">
-          <label class="btn-sub qr-check-btn" id="btn-qr-check">
+          <button type="button" class="btn-sub qr-check-btn" id="btn-qr-live">
             <span>📷</span> <span data-i18n="qr.open">QR로 당첨 확인</span>
+          </button>
+          <label class="qr-alt-btn" id="btn-qr-check">
+            <span data-i18n="qr.capture">카메라 앱으로 찍어서 확인</span>
             <input type="file" accept="image/*" capture="environment" class="qr-file-input" id="qr-capture-main">
           </label>
-          <button type="button" class="qr-live-btn" id="btn-qr-live" data-i18n="qr.live">실시간 카메라로 스캔</button>
         </div>
 
         <a class="btn-sub lottery-link" id="lottery-link" href="https://www.dhlottery.co.kr/" target="_blank" rel="noopener noreferrer">
@@ -2422,7 +2425,6 @@
         'link.onestore': '원스토어에서 앱 받기',
 
         'qr.open': 'QR로 당첨 확인',
-        'qr.live': '실시간 카메라로 스캔',
         'qr.title': 'QR로 당첨 확인',
         'qr.close': '닫기',
         'qr.rescan': '카메라로 스캔',
@@ -2645,7 +2647,6 @@
         'link.onestore': 'Get the app on ONE store',
 
         'qr.open': 'Check ticket by QR',
-        'qr.live': 'Scan with live camera',
         'qr.title': 'Check ticket by QR',
         'qr.close': 'Close',
         'qr.rescan': 'Scan with camera',
@@ -2868,7 +2869,6 @@
         'link.onestore': '在 ONE store 下载应用',
 
         'qr.open': '扫码查询中奖',
-        'qr.live': '用实时相机扫描',
         'qr.title': '扫码查询中奖',
         'qr.close': '关闭',
         'qr.rescan': '用相机扫描',
@@ -3091,7 +3091,6 @@
         'link.onestore': 'ONE store でアプリを入手',
 
         'qr.open': 'QRで当選確認',
-        'qr.live': 'ライブカメラでスキャン',
         'qr.title': 'QRで当選確認',
         'qr.close': '閉じる',
         'qr.rescan': 'カメラでスキャン',
@@ -4505,8 +4504,8 @@
     const qrResult = document.getElementById('qr-result');
     const qrRescanBtn = document.getElementById('qr-rescan');
     const qrFileInput = document.getElementById('qr-file');
-    const qrCaptureMain = document.getElementById('qr-capture-main'); // 로또 탭 기본 버튼: 폰 카메라 앱을 바로 연다
-    const btnQrLive = document.getElementById('btn-qr-live');         // 보조 버튼: 사이트 안 실시간 카메라
+    const btnQrLive = document.getElementById('btn-qr-live');         // 로또 탭 기본 버튼: 사이트 안 실시간 카메라
+    const qrCaptureMain = document.getElementById('qr-capture-main'); // 보조 버튼: 폰 카메라 앱으로 찍어서 확인
     const qrZoomBtn = document.getElementById('qr-zoom');
     const qrLensBtn = document.getElementById('qr-lens');
     const qrCaptureInput = document.getElementById('qr-capture');
@@ -5175,7 +5174,7 @@
       document.getElementById('qr-close').focus();
     }
 
-    // 보조 버튼: 사이트 안 실시간 카메라로 스캔
+    // 기본 버튼: 사이트 안 실시간 카메라로 스캔
     function openQrModal() {
       showQrModal(btnQrLive);
       playPopSound(620);
@@ -5216,7 +5215,7 @@
     });
     qrVideo.addEventListener('click', refocusQrCamera);
     // 사진 고르기와 카메라 앱으로 찍기는 같은 방식으로 읽는다.
-    // 로또 탭의 기본 버튼(qrCaptureMain)은 창이 닫힌 채로 카메라 앱을 여므로, 사진을 받으면 창을 연다
+    // 로또 탭의 보조 버튼(qrCaptureMain)은 창이 닫힌 채로 카메라 앱을 여므로, 사진을 받으면 창을 연다
     [qrFileInput, qrCaptureInput, qrCaptureMain].forEach(input => {
       input.addEventListener('change', () => {
         const file = input.files && input.files[0];
