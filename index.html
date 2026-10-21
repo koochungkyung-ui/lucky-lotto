@@ -1326,7 +1326,7 @@
       object-fit: cover;
       display: block;
     }
-    /* 가운데 네모 칸: QR을 맞출 위치 안내 (실제로는 화면 전체를 읽는다) */
+    /* 가운데 네모 칸: QR을 맞출 위치. jsQR은 이 칸 영역을 원본 화질로 읽는다(qrBoxInVideo) */
     .qr-frame {
       position: absolute;
       inset: 12%;
@@ -1334,6 +1334,112 @@
       border-radius: 14px;
       box-shadow: 0 0 0 999px rgba(15, 23, 42, 0.35);
       pointer-events: none;
+    }
+    /* 스캔 중에는 카메라 화면을 전체 화면으로 (전용 스캔 앱처럼 가운데 네모 칸만 밝게) */
+    .qr-modal.fullscreen {
+      padding: 0;
+      background: #000000;
+      backdrop-filter: none;
+    }
+    .qr-modal.fullscreen .qr-dialog {
+      --qr-box: min(72vw, 50vh, 340px);
+      position: relative;
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      max-height: none;
+      overflow: hidden;
+      border: 0;
+      border-radius: 0;
+      background: #000000;
+      color: #ffffff;
+      padding: max(14px, env(safe-area-inset-top)) 16px max(14px, env(safe-area-inset-bottom));
+    }
+    .qr-modal.fullscreen #qr-scan {
+      flex: 1;
+    }
+    .qr-modal.fullscreen .qr-viewport {
+      position: absolute;
+      inset: 0;
+      width: auto;
+      aspect-ratio: auto;
+      max-height: none;
+      border-radius: 0;
+      background: #000000;
+    }
+    .qr-modal.fullscreen .qr-frame {
+      inset: auto;
+      left: 50%;
+      top: 46%;
+      width: var(--qr-box);
+      height: var(--qr-box);
+      transform: translate(-50%, -50%);
+      border-radius: 18px;
+      box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.55);
+    }
+    .qr-modal.fullscreen .qr-frame::after {
+      content: '';
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      top: 10%;
+      height: 2px;
+      border-radius: 2px;
+      background: #818cf8;
+      box-shadow: 0 0 10px 2px rgba(129, 140, 248, 0.8);
+      animation: qrScanLine 1.8s ease-in-out infinite alternate;
+    }
+    @keyframes qrScanLine {
+      from { top: 10%; }
+      to { top: 90%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .qr-modal.fullscreen .qr-frame::after { animation: none; top: 50%; }
+    }
+    .qr-modal.fullscreen .qr-hint {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      top: calc(46% + var(--qr-box) / 2 + 18px);
+      margin: 0;
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+      z-index: 1;
+    }
+    .qr-modal.fullscreen .qr-hint.error {
+      color: #fca5a5;
+    }
+    .qr-modal.fullscreen .qr-head,
+    .qr-modal.fullscreen .qr-actions,
+    .qr-modal.fullscreen .qr-privacy {
+      position: relative;
+      z-index: 1;
+    }
+    .qr-modal.fullscreen .qr-head h2 {
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    }
+    .qr-modal.fullscreen .qr-close {
+      background: rgba(0, 0, 0, 0.45);
+      border-color: rgba(255, 255, 255, 0.5);
+      color: #ffffff;
+    }
+    .qr-modal.fullscreen .qr-actions .btn-sub {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+      backdrop-filter: blur(6px);
+    }
+    .qr-modal.fullscreen .qr-privacy {
+      color: rgba(255, 255, 255, 0.75);
+    }
+    .qr-modal.fullscreen .qr-zoom {
+      right: auto;
+      bottom: auto;
+      left: 50%;
+      top: calc(46% - var(--qr-box) / 2 - 52px);
+      transform: translateX(-50%);
+      z-index: 1;
     }
     .qr-zoom {
       position: absolute;
@@ -2142,7 +2248,7 @@
       <div id="qr-scan">
         <div class="qr-viewport" id="qr-viewport">
           <video id="qr-video" playsinline muted></video>
-          <div class="qr-frame"></div>
+          <div class="qr-frame" id="qr-frame"></div>
           <button type="button" class="qr-zoom" id="qr-zoom" hidden aria-label="확대 배율 바꾸기" data-i18n-aria="qr.zoom">2×</button>
         </div>
         <p class="qr-hint" id="qr-hint" aria-live="polite"></p>
@@ -4272,6 +4378,7 @@
     const qrFileInput = document.getElementById('qr-file');
     const btnQrCheck = document.getElementById('btn-qr-check');
     const qrZoomBtn = document.getElementById('qr-zoom');
+    const qrFrame = document.getElementById('qr-frame');
     const qrCanvas = document.createElement('canvas');
     const qrCtx = qrCanvas.getContext('2d', { willReadFrequently: true });
 
@@ -4399,6 +4506,7 @@
     function renderQr() {
       const s = qrState.status;
       const showScan = s === 'starting' || s === 'scanning' || s === 'nocamera' || s === 'reading' || s === 'error';
+      qrModal.classList.toggle('fullscreen', s === 'starting' || s === 'scanning');
       qrScanBox.hidden = !showScan;
       qrViewport.hidden = !(s === 'starting' || s === 'scanning' || (s === 'error' && qrStream));
       qrRescanBtn.hidden = s === 'starting' || s === 'scanning';
@@ -4525,9 +4633,9 @@
               mode = 'jsQR full';
               drawToQrCanvas(qrVideo, 0, 0, vw, vh, Math.min(960, Math.max(vw, vh)));
             } else {
-              mode = 'jsQR center';
-              const side = Math.min(vw, vh) * QR_CENTER_AREA;
-              drawToQrCanvas(qrVideo, (vw - side) / 2, (vh - side) / 2, side, side, side);
+              mode = 'jsQR box';
+              const box = qrBoxInVideo();
+              drawToQrCanvas(qrVideo, box.x, box.y, box.size, box.size, Math.max(box.size, 480));
             }
             text = await decodeQrCanvas(false);
           }
@@ -4568,7 +4676,8 @@
     }
 
     async function openQrCamera() {
-      const size = { width: { ideal: 1920 }, height: { ideal: 1080 } };
+      // 연속 자동 초점은 켤 때부터 요청한다 (켠 뒤에 바꾸면 무시하는 폰이 있음). 못 맞추는 조건은 브라우저가 건너뛴다
+      const size = { width: { ideal: 1920 }, height: { ideal: 1080 }, advanced: [{ focusMode: 'continuous' }] };
       const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { ...size, facingMode: { ideal: 'environment' } } });
       if (!isFixedFocusCamera(stream)) return stream;
 
@@ -4597,6 +4706,28 @@
         other.getTracks().forEach(track => track.stop());
       }
       return stream;
+    }
+
+    // 화면의 네모 칸(.qr-frame)이 카메라 원본 화면에서 어디인지 계산한다 (video는 object-fit: cover).
+    // 칸이 보이지 않으면 가운데 QR_CENTER_AREA 비율을 쓴다. 칸보다 15% 넓게 잡아 가장자리에 걸친 QR도 읽는다
+    function qrBoxInVideo() {
+      const vw = qrVideo.videoWidth;
+      const vh = qrVideo.videoHeight;
+      const vr = qrVideo.getBoundingClientRect();
+      const fr = qrFrame.getBoundingClientRect();
+      if (!vr.width || !fr.width) {
+        const side = Math.min(vw, vh) * QR_CENTER_AREA;
+        return { x: (vw - side) / 2, y: (vh - side) / 2, size: side };
+      }
+      const scale = Math.max(vr.width / vw, vr.height / vh);
+      const offsetX = (vr.width - vw * scale) / 2;
+      const offsetY = (vr.height - vh * scale) / 2;
+      const cx = (fr.left + fr.width / 2 - vr.left - offsetX) / scale;
+      const cy = (fr.top + fr.height / 2 - vr.top - offsetY) / scale;
+      const size = Math.min(vw, vh, (fr.width / scale) * 1.15);
+      const x = Math.min(Math.max(cx - size / 2, 0), vw - size);
+      const y = Math.min(Math.max(cy - size / 2, 0), vh - size);
+      return { x, y, size };
     }
 
     function tuneQrCamera(stream) {
@@ -4736,19 +4867,23 @@
       setQrState({ status: 'error', errorKey: sawOtherQr ? 'qr.errNotLotto' : 'qr.errPhoto' });
     }
 
+    // 폰의 뒤로 가기를 누르면 사이트를 벗어나지 않고 창만 닫히도록, 열 때 기록을 하나 넣어 둔다
     function openQrModal() {
       qrModal.hidden = false;
+      try { history.pushState({ qrScanner: true }, ''); } catch (e) {}
       document.addEventListener('keydown', onQrKeydown);
       document.getElementById('qr-close').focus();
       playPopSound(620);
       startQrCamera();
     }
 
-    function closeQrModal() {
+    function closeQrModal(fromHistory) {
+      if (qrModal.hidden) return;
       stopQrCamera();
       qrModal.hidden = true;
       document.removeEventListener('keydown', onQrKeydown);
       btnQrCheck.focus();
+      if (fromHistory !== true && history.state && history.state.qrScanner) history.back();
     }
 
     function onQrKeydown(event) {
@@ -4756,7 +4891,8 @@
     }
 
     btnQrCheck.addEventListener('click', openQrModal);
-    document.getElementById('qr-close').addEventListener('click', closeQrModal);
+    document.getElementById('qr-close').addEventListener('click', () => closeQrModal());
+    window.addEventListener('popstate', () => closeQrModal(true));
     qrModal.addEventListener('click', event => { if (event.target === qrModal) closeQrModal(); });
     qrRescanBtn.addEventListener('click', startQrCamera);
     qrZoomBtn.addEventListener('click', () => {
