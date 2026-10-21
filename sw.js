@@ -51,6 +51,22 @@ self.addEventListener('fetch', event => {
     return;
   }
 
+  // 당첨번호 데이터: 추첨 직후에도 새 회차가 보이도록 네트워크 먼저, 오프라인이면 저장해 둔 것
+  if (url.origin === self.location.origin && url.pathname.startsWith('/data/')) {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE).then(cache => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request, { ignoreSearch: true }))
+    );
+    return;
+  }
+
   // 나머지 파일·글꼴: 저장해 둔 것을 바로 쓰고, 뒤에서 새로 받아 둠
   event.respondWith(
     caches.match(request).then(cached => {

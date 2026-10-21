@@ -1252,6 +1252,221 @@
       margin-top: 12px;
     }
 
+    /* QR 당첨 확인 창 */
+    .qr-check-btn {
+      flex: none;
+      width: 100%;
+    }
+    .btn-sub[hidden] {
+      display: none;
+    }
+    .qr-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(4px);
+    }
+    .qr-modal[hidden] {
+      display: none;
+    }
+    .qr-dialog {
+      width: 100%;
+      max-width: 460px;
+      max-height: 100%;
+      overflow-y: auto;
+      background: var(--canvas-bg);
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--card-shadow);
+      padding: 18px 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .qr-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .qr-head h2 {
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .qr-close {
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      border: 1px solid var(--sub-border);
+      border-radius: 50%;
+      background: var(--sub-bg);
+      color: var(--text-main);
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .qr-viewport {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-height: 48vh;
+      margin: 0 auto;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: #0f172a;
+    }
+    .qr-viewport video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    /* 가운데 네모 칸: 이 안의 화면만 읽는다 (스크립트의 QR_SCAN_AREA와 같은 비율) */
+    .qr-frame {
+      position: absolute;
+      inset: 12%;
+      border: 3px solid rgba(255, 255, 255, 0.9);
+      border-radius: 14px;
+      box-shadow: 0 0 0 999px rgba(15, 23, 42, 0.35);
+      pointer-events: none;
+    }
+    .qr-hint {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 10px;
+      min-height: 20px;
+    }
+    .qr-hint.error {
+      color: #dc2626;
+    }
+    body.dark .qr-hint.error {
+      color: #f87171;
+    }
+    .qr-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .qr-actions .btn-sub {
+      position: relative;
+    }
+    .qr-file-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .qr-privacy {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .qr-result {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .qr-draw {
+      text-align: center;
+      background: var(--sub-bg);
+      border: 1px solid var(--sub-border);
+      border-radius: var(--radius-md);
+      padding: 12px 10px;
+    }
+    .qr-round {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .qr-summary {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 800;
+      padding: 10px;
+      border-radius: var(--radius-md);
+      background: var(--badge-bg);
+      color: var(--badge-text);
+    }
+    .qr-summary.win {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    body.dark .qr-summary.win {
+      background: rgba(245, 158, 11, 0.18);
+      color: #fcd34d;
+    }
+    .qr-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .qr-row {
+      padding: 10px 12px;
+    }
+    .qr-row:hover {
+      transform: none;
+      box-shadow: none;
+    }
+    .qr-row .balls-list {
+      flex: 1;
+      gap: 6px;
+      flex-wrap: nowrap;
+      min-width: 0;
+    }
+    .qr-row .ball,
+    .qr-draw .ball {
+      width: 34px;
+      height: 34px;
+      font-size: 14px;
+    }
+    .ball.qr-miss {
+      filter: grayscale(1) opacity(0.3); /* opacity 속성은 공 등장 애니메이션(popBall)이 덮어쓰므로 filter로 흐리게 */
+    }
+    .ball.qr-bonus-hit {
+      outline: 3px solid #f59e0b;
+      outline-offset: 1px;
+    }
+    .qr-row {
+      flex-wrap: wrap;
+      row-gap: 4px;
+    }
+    .qr-rank {
+      flex: 0 0 56px;
+      text-align: right;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .qr-rank.hit,
+    .qr-prize {
+      color: #d97706;
+    }
+    body.dark .qr-rank.hit,
+    body.dark .qr-prize {
+      color: #fbbf24;
+    }
+    .qr-prize {
+      flex-basis: 100%;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .qr-actions .btn-sub {
+      height: auto;
+      min-height: 42px;
+      padding: 6px 8px;
+      line-height: 1.25;
+      text-align: center;
+    }
+
     /* 모바일 반응형 대응 */
     @media (max-width: 540px) {
       body {
@@ -1319,6 +1534,30 @@
       }
       #drawing-canvas {
         height: 220px;
+      }
+      .qr-modal {
+        padding: 12px;
+      }
+      .qr-dialog {
+        padding: 16px 14px 12px;
+      }
+      .qr-row {
+        padding: 9px 8px;
+      }
+      .qr-row .balls-list,
+      .qr-draw .balls-list {
+        gap: 4px;
+      }
+      .qr-row .ball,
+      .qr-draw .ball {
+        flex: 0 1 30px;
+        width: auto;
+        height: auto;
+        font-size: 13px;
+      }
+      .qr-rank {
+        flex-basis: 48px;
+        font-size: 13px;
       }
     }
 
@@ -1657,6 +1896,11 @@
           </button>
         </div>
 
+        <!-- 한국 로또 용지 QR로 당첨 확인 (한국 로또를 골랐을 때만 보임) -->
+        <button class="btn-sub qr-check-btn" id="btn-qr-check">
+          <span>📷</span> <span data-i18n="qr.open">QR로 당첨 확인</span>
+        </button>
+
         <a class="btn-sub lottery-link" id="lottery-link" href="https://www.dhlottery.co.kr/" target="_blank" rel="noopener noreferrer">
           <span>🔗</span> <span id="lottery-link-text">동행복권 공식 홈페이지</span>
         </a>
@@ -1870,6 +2114,34 @@
 
   </div>
 
+  <!-- QR 당첨 확인 창: 카드 밖에 둬야 화면 전체를 덮는다 -->
+  <div class="qr-modal" id="qr-modal" hidden>
+    <div class="qr-dialog" role="dialog" aria-modal="true" aria-labelledby="qr-title">
+      <div class="qr-head">
+        <h2 id="qr-title" data-i18n="qr.title">QR로 당첨 확인</h2>
+        <button type="button" class="qr-close" id="qr-close" aria-label="닫기" data-i18n-aria="qr.close">✕</button>
+      </div>
+      <div id="qr-scan">
+        <div class="qr-viewport" id="qr-viewport">
+          <video id="qr-video" playsinline muted></video>
+          <div class="qr-frame"></div>
+        </div>
+        <p class="qr-hint" id="qr-hint" aria-live="polite"></p>
+      </div>
+      <div class="qr-result" id="qr-result" aria-live="polite"></div>
+      <div class="qr-actions">
+        <button type="button" class="btn-sub" id="qr-rescan">
+          <span>📷</span> <span data-i18n="qr.rescan">다시 스캔</span>
+        </button>
+        <label class="btn-sub">
+          <span>🖼️</span> <span data-i18n="qr.photo">사진으로 확인</span>
+          <input type="file" accept="image/*" class="qr-file-input" id="qr-file">
+        </label>
+      </div>
+      <p class="qr-privacy" data-i18n="qr.privacy">카메라 화면과 사진은 이 기기 안에서만 읽고, 어디에도 보내지 않아요.</p>
+    </div>
+  </div>
+
   <!-- 복사 알림 토스트 -->
   <div class="toast" id="toast">
     <span>✅</span> <span data-i18n="toast.copied">클립보드에 복사되었습니다!</span>
@@ -1918,6 +2190,33 @@
         'link.lotteries': '해외 복권 비교',
         'link.tarot': '타로 카드 22장의 의미',
         'link.onestore': '원스토어에서 앱 받기',
+
+        'qr.open': 'QR로 당첨 확인',
+        'qr.title': 'QR로 당첨 확인',
+        'qr.close': '닫기',
+        'qr.rescan': '카메라로 스캔',
+        'qr.photo': '사진으로 확인',
+        'qr.privacy': '카메라 화면과 사진은 이 기기 안에서만 읽고, 어디에도 보내지 않아요.',
+        'qr.starting': '카메라를 켜는 중이에요…',
+        'qr.scanning': '로또 용지 오른쪽 위 QR을 네모 칸 안에 맞춰 주세요.',
+        'qr.noCamera': '카메라를 쓸 수 없어요. 카메라 권한을 허용하거나 사진으로 확인해 주세요.',
+        'qr.reading': '사진에서 QR을 찾는 중이에요…',
+        'qr.loading': '당첨번호를 불러오는 중이에요…',
+        'qr.paused': '화면을 벗어나서 카메라를 껐어요. 아래 버튼을 누르면 다시 스캔해요.',
+        'qr.errNotLotto': '로또 6/45 용지의 QR이 아니에요.',
+        'qr.errPhoto': '사진에서 QR을 찾지 못했어요. QR이 잘 보이게 가까이 찍어 주세요.',
+        'qr.errData': '당첨번호를 불러오지 못했어요. 인터넷 연결을 확인하고 다시 시도해 주세요.',
+        'qr.errLib': 'QR 인식 기능을 불러오지 못했어요. 인터넷 연결을 확인해 주세요.',
+        'qr.pending': '{round}회는 아직 추첨 전이에요 (추첨일 {date}). 추첨 후 다시 확인해 주세요.',
+        'qr.noDraw': '{round}회 당첨번호를 찾지 못했어요.',
+        'qr.round': '제 {round}회 당첨번호 · {date}',
+        'qr.win': '{count}게임 당첨! 당첨금 합계 {amount}',
+        'qr.lose': '아쉽게도 이번에는 낙첨이에요.',
+        'qr.rank': '{rank}등',
+        'qr.miss': '낙첨',
+        'qr.expired': '당첨금 지급 기한(추첨 다음 날부터 1년)이 지났어요.',
+        'qr.bigPrize': '1등은 NH농협은행 본점, 2·3등은 NH농협은행 지점에서 당첨금을 받을 수 있어요. 용지를 잘 보관하세요.',
+        'qr.disclaimer': '당첨금은 1인당 세전 금액이에요. 정확한 결과는 동행복권에서 확인하세요.',
 
         'lotto.title': '로또 번호 추천기',
         'lotto.subtitle': '버튼 하나로 당신만의 행운 번호를 뽑아보세요!',
@@ -2108,6 +2407,33 @@
         'link.tarot': 'Meanings of the 22 tarot cards',
         'link.onestore': 'Get the app on ONE store',
 
+        'qr.open': 'Check ticket by QR',
+        'qr.title': 'Check ticket by QR',
+        'qr.close': 'Close',
+        'qr.rescan': 'Scan with camera',
+        'qr.photo': 'Check from photo',
+        'qr.privacy': 'Camera frames and photos are read only on this device and never sent anywhere.',
+        'qr.starting': 'Turning on the camera…',
+        'qr.scanning': 'Fit the QR code (top right of the ticket) inside the square.',
+        'qr.noCamera': 'Camera unavailable. Allow camera access or check from a photo.',
+        'qr.reading': 'Looking for the QR code in the photo…',
+        'qr.loading': 'Loading winning numbers…',
+        'qr.paused': 'The camera was turned off while you were away. Tap the button below to scan again.',
+        'qr.errNotLotto': 'This is not a Lotto 6/45 ticket QR code.',
+        'qr.errPhoto': 'No QR code found in the photo. Take a closer, clearer shot.',
+        'qr.errData': 'Couldn\'t load the winning numbers. Check your connection and try again.',
+        'qr.errLib': 'Couldn\'t load the QR reader. Check your internet connection.',
+        'qr.pending': 'Draw {round} hasn\'t happened yet (draw date {date}). Check again after the draw.',
+        'qr.noDraw': 'Couldn\'t find the winning numbers for draw {round}.',
+        'qr.round': 'Draw {round} winning numbers · {date}',
+        'qr.win': '{count} winning game(s)! Total {amount}',
+        'qr.lose': 'No luck this time.',
+        'qr.rank': 'Rank {rank}',
+        'qr.miss': 'No win',
+        'qr.expired': 'The claim period (1 year from the day after the draw) has passed.',
+        'qr.bigPrize': '1st prizes are paid at NH NongHyup Bank headquarters, 2nd and 3rd at NH NongHyup Bank branches. Keep your ticket safe.',
+        'qr.disclaimer': 'Prize amounts are per winner, before tax. Confirm official results with Donghang Lottery.',
+
         'lotto.title': 'Lotto Number Picker',
         'lotto.subtitle': 'Draw your own lucky numbers with a single tap!',
         'lotto.lotteryAria': 'Lottery type',
@@ -2297,6 +2623,33 @@
         'link.tarot': '22 张塔罗牌的含义',
         'link.onestore': '在 ONE store 下载应用',
 
+        'qr.open': '扫码查询中奖',
+        'qr.title': '扫码查询中奖',
+        'qr.close': '关闭',
+        'qr.rescan': '用相机扫描',
+        'qr.photo': '从照片查询',
+        'qr.privacy': '相机画面和照片只在本设备上读取，不会发送到任何地方。',
+        'qr.starting': '正在打开相机…',
+        'qr.scanning': '请将彩票右上角的二维码对准方框。',
+        'qr.noCamera': '无法使用相机。请允许相机权限，或从照片查询。',
+        'qr.reading': '正在照片中查找二维码…',
+        'qr.loading': '正在加载中奖号码…',
+        'qr.paused': '离开页面时已关闭相机。点击下方按钮即可重新扫描。',
+        'qr.errNotLotto': '这不是乐透 6/45 彩票的二维码。',
+        'qr.errPhoto': '未能在照片中找到二维码。请靠近一些拍清楚。',
+        'qr.errData': '无法加载中奖号码。请检查网络后重试。',
+        'qr.errLib': '无法加载二维码识别功能。请检查网络连接。',
+        'qr.pending': '第 {round} 期尚未开奖（开奖日 {date}）。请在开奖后再查询。',
+        'qr.noDraw': '找不到第 {round} 期的中奖号码。',
+        'qr.round': '第 {round} 期中奖号码 · {date}',
+        'qr.win': '{count} 注中奖！奖金合计 {amount}',
+        'qr.lose': '很遗憾，这次没有中奖。',
+        'qr.rank': '{rank}等奖',
+        'qr.miss': '未中奖',
+        'qr.expired': '已超过兑奖期限（开奖次日起 1 年）。',
+        'qr.bigPrize': '一等奖在 NH 农协银行总行兑领，二、三等奖在 NH 农协银行支行兑领。请妥善保管彩票。',
+        'qr.disclaimer': '奖金为每注税前金额。请以东行彩票公布的结果为准。',
+
         'lotto.title': '乐透选号器',
         'lotto.subtitle': '一键抽出属于你的幸运号码！',
         'lotto.lotteryAria': '彩票种类',
@@ -2485,6 +2838,33 @@
         'link.lotteries': '海外宝くじ比較',
         'link.tarot': 'タロットカード 22 枚の意味',
         'link.onestore': 'ONE store でアプリを入手',
+
+        'qr.open': 'QRで当選確認',
+        'qr.title': 'QRで当選確認',
+        'qr.close': '閉じる',
+        'qr.rescan': 'カメラでスキャン',
+        'qr.photo': '写真で確認',
+        'qr.privacy': 'カメラ映像と写真はこの端末の中だけで読み取り、どこにも送信しません。',
+        'qr.starting': 'カメラを起動しています…',
+        'qr.scanning': '用紙右上のQRコードを四角の中に合わせてください。',
+        'qr.noCamera': 'カメラを使用できません。カメラへのアクセスを許可するか、写真で確認してください。',
+        'qr.reading': '写真からQRコードを探しています…',
+        'qr.loading': '当選番号を読み込んでいます…',
+        'qr.paused': '画面を離れたためカメラを停止しました。下のボタンで再スキャンできます。',
+        'qr.errNotLotto': 'ロト6/45の用紙のQRコードではありません。',
+        'qr.errPhoto': '写真からQRコードが見つかりませんでした。近づいてはっきり撮影してください。',
+        'qr.errData': '当選番号を読み込めませんでした。接続を確認してもう一度お試しください。',
+        'qr.errLib': 'QRコード読み取り機能を読み込めませんでした。インターネット接続を確認してください。',
+        'qr.pending': '第{round}回はまだ抽選前です（抽選日 {date}）。抽選後にもう一度確認してください。',
+        'qr.noDraw': '第{round}回の当選番号が見つかりませんでした。',
+        'qr.round': '第{round}回 当選番号 · {date}',
+        'qr.win': '{count}ゲーム当選！当選金合計 {amount}',
+        'qr.lose': '残念ながら今回はハズレです。',
+        'qr.rank': '{rank}等',
+        'qr.miss': 'ハズレ',
+        'qr.expired': '当選金の支払期限（抽選翌日から1年）が過ぎています。',
+        'qr.bigPrize': '1等はNH農協銀行本店、2・3等はNH農協銀行の支店で受け取れます。用紙は大切に保管してください。',
+        'qr.disclaimer': '当選金は1口あたりの税引前の金額です。正式な結果は東行宝くじでご確認ください。',
 
         'lotto.title': 'ロト番号ジェネレーター',
         'lotto.subtitle': 'ボタンひとつであなただけのラッキーナンバーを！',
@@ -2835,6 +3215,7 @@
       });
       lotteryBadgeIcon.textContent = lottery.icon;
       colorLegend.style.display = key === 'kr' ? '' : 'none';
+      document.getElementById('btn-qr-check').hidden = key !== 'kr'; // QR 당첨 확인은 한국 로또 용지만 가능
       lotteryLink.href = lottery.site;
       refreshLotteryTexts();
 
@@ -3846,6 +4227,385 @@
     });
 
     /* ========================================================
+       6-2. QR 당첨 확인 (한국 로또 6/45)
+       ======================================================== */
+    // 용지 QR 내용 예: http://qr.dhlottery.co.kr/?v=1246q081014224044q010209212739...<용지 고유번호>
+    // v= 뒤에 회차 4자리, 그다음 게임마다 [영문 1글자 + 번호 6개(두 자리씩)]가 최대 5번 이어진다.
+    // 영문은 q=자동, m=수동, s=반자동으로 알려져 있다. 당첨번호는 data/lotto645.json에서 읽는다.
+    const QR_SCAN_AREA = 0.76;      // 카메라 화면 가운데 이 비율만 읽는다 (.qr-frame의 inset 12%와 맞춤)
+    const QR_SCAN_INTERVAL = 180;   // 카메라 화면을 읽는 간격(ms)
+    const JSQR_URL = '/vendor/jsQR.js'; // jsQR 1.4.0 (Apache-2.0, vendor/jsQR-LICENSE.txt). 내장 QR 인식이 없는 기기에서만 받는다
+
+    const qrModal = document.getElementById('qr-modal');
+    const qrVideo = document.getElementById('qr-video');
+    const qrViewport = document.getElementById('qr-viewport');
+    const qrScanBox = document.getElementById('qr-scan');
+    const qrHint = document.getElementById('qr-hint');
+    const qrResult = document.getElementById('qr-result');
+    const qrRescanBtn = document.getElementById('qr-rescan');
+    const qrFileInput = document.getElementById('qr-file');
+    const btnQrCheck = document.getElementById('btn-qr-check');
+    const qrCanvas = document.createElement('canvas');
+    const qrCtx = qrCanvas.getContext('2d', { willReadFrequently: true });
+
+    // status: starting | scanning | nocamera | reading | loading | result | error
+    let qrState = { status: 'starting', errorKey: null, ticket: null };
+    let qrStream = null;
+    let qrScanTimer = null;
+    let qrLastText = '';
+    let qrDraws = null;            // 회차 → [회차, 날짜, 번호 6개, 보너스, 1~5등 당첨금]
+    let qrDrawsPromise = null;
+    let jsQrPromise = null;
+    let qrDetector = null;
+    try {
+      if ('BarcodeDetector' in window) qrDetector = new BarcodeDetector({ formats: ['qr_code'] });
+    } catch (e) {}
+
+    function parseLottoQr(text) {
+      const m = /[?&]v=(\d{4})((?:[a-z]\d{12}){1,5})/i.exec(String(text || ''));
+      if (!m) return null;
+      const games = m[2].match(/[a-z]\d{12}/gi).map(chunk => ({
+        type: chunk[0].toLowerCase(),
+        numbers: chunk.slice(1).match(/\d{2}/g).map(Number)
+      }));
+      const valid = games.every(g => g.numbers.every(n => n >= 1 && n <= 45) && new Set(g.numbers).size === 6);
+      if (!valid) return null;
+      games.forEach(g => g.numbers.sort((a, b) => a - b));
+      return { round: Number(m[1]), games };
+    }
+
+    function loadLottoDraws() {
+      if (qrDraws) return Promise.resolve(qrDraws);
+      if (!qrDrawsPromise) {
+        qrDrawsPromise = fetch('/data/lotto645.json', { cache: 'no-cache' })
+          .then(res => { if (!res.ok) throw new Error(res.status); return res.json(); })
+          .then(json => {
+            qrDraws = new Map(json.draws.map(row => [row[0], row]));
+            return qrDraws;
+          })
+          .catch(err => { qrDrawsPromise = null; throw err; });
+      }
+      return qrDrawsPromise;
+    }
+
+    function loadJsQr() {
+      if (window.jsQR) return Promise.resolve(window.jsQR);
+      if (!jsQrPromise) {
+        jsQrPromise = new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = JSQR_URL;
+          script.onload = () => (window.jsQR ? resolve(window.jsQR) : reject(new Error('jsQR')));
+          script.onerror = () => { jsQrPromise = null; reject(new Error('jsQR')); };
+          document.head.appendChild(script);
+        });
+      }
+      return jsQrPromise;
+    }
+
+    // 캔버스에 그린 그림에서 QR 글자를 읽는다. 브라우저 내장 기능(안드로이드 Chrome 등)이 있으면 그것을, 없으면 jsQR을 쓴다
+    async function decodeQrCanvas(useBoth) {
+      if (qrDetector) {
+        try {
+          const codes = await qrDetector.detect(qrCanvas);
+          if (codes.length) return codes[0].rawValue;
+          if (!useBoth) return null;
+        } catch (e) {
+          qrDetector = null;
+        }
+      }
+      const jsQR = await loadJsQr();
+      const image = qrCtx.getImageData(0, 0, qrCanvas.width, qrCanvas.height);
+      const found = jsQR(image.data, image.width, image.height, { inversionAttempts: 'dontInvert' });
+      return found ? found.data : null;
+    }
+
+    function drawToQrCanvas(source, sx, sy, sw, sh, longest) {
+      const scale = longest / Math.max(sw, sh);
+      qrCanvas.width = Math.max(1, Math.round(sw * scale));
+      qrCanvas.height = Math.max(1, Math.round(sh * scale));
+      qrCtx.drawImage(source, sx, sy, sw, sh, 0, 0, qrCanvas.width, qrCanvas.height);
+    }
+
+    function setQrState(next) {
+      qrState = { ...qrState, errorKey: null, ...next };
+      renderQr();
+    }
+
+    function formatWon(amount) {
+      return currentLang === 'ko' ? `${amount.toLocaleString('ko-KR')}원` : `₩${amount.toLocaleString('en-US')}`;
+    }
+
+    function qrRankOf(numbers, draw) {
+      const win = draw.slice(2, 8);
+      const bonus = draw[8];
+      const hits = numbers.filter(n => win.includes(n)).length;
+      const bonusHit = numbers.includes(bonus);
+      if (hits === 6) return 1;
+      if (hits === 5 && bonusHit) return 2;
+      if (hits === 5) return 3;
+      if (hits === 4) return 4;
+      if (hits === 3) return 5;
+      return 0;
+    }
+
+    function qrBallsHtml(numbers, cls) {
+      return numbers.map((n, i) => {
+        const extra = typeof cls === 'function' ? cls(n) : (cls || '');
+        return `<div class="ball ${getBallClass(n)} ${extra}" style="animation-delay: ${i * 0.04}s">${n}</div>`;
+      }).join('');
+    }
+
+    function renderQr() {
+      const s = qrState.status;
+      const showScan = s === 'starting' || s === 'scanning' || s === 'nocamera' || s === 'reading' || s === 'error';
+      qrScanBox.hidden = !showScan;
+      qrViewport.hidden = !(s === 'starting' || s === 'scanning' || (s === 'error' && qrStream));
+      qrRescanBtn.hidden = s === 'starting' || s === 'scanning';
+
+      const hintKey = qrState.errorKey || {
+        starting: 'qr.starting', scanning: 'qr.scanning', nocamera: 'qr.noCamera', reading: 'qr.reading'
+      }[s];
+      qrHint.textContent = hintKey ? t(hintKey) : '';
+      qrHint.classList.toggle('error', !!qrState.errorKey || s === 'nocamera');
+
+      if (s === 'loading') {
+        qrResult.innerHTML = `<p class="qr-note">${t('qr.loading')}</p>`;
+        return;
+      }
+      if (s !== 'result' || !qrState.ticket) {
+        qrResult.innerHTML = '';
+        return;
+      }
+
+      const { ticket } = qrState;
+      const labels = ['A', 'B', 'C', 'D', 'E'];
+      const draw = qrDraws && qrDraws.get(ticket.round);
+      let html = '';
+
+      if (!draw) {
+        // 아직 추첨 전이거나 파일에 없는 회차
+        const latest = qrDraws ? Math.max(...qrDraws.keys()) : 0;
+        if (latest && ticket.round > latest) {
+          const base = new Date(qrDraws.get(latest)[1] + 'T00:00:00');
+          base.setDate(base.getDate() + 7 * (ticket.round - latest));
+          const date = `${base.getFullYear()}-${String(base.getMonth() + 1).padStart(2, '0')}-${String(base.getDate()).padStart(2, '0')}`;
+          html += `<div class="qr-summary">⏳ ${t('qr.pending', { round: ticket.round, date })}</div>`;
+        } else {
+          html += `<div class="qr-summary">${t('qr.noDraw', { round: ticket.round })}</div>`;
+        }
+        ticket.games.forEach((g, i) => {
+          html += `<div class="lotto-game-row qr-row"><div class="game-tag">${labels[i]}</div><div class="balls-list">${qrBallsHtml(g.numbers)}</div></div>`;
+        });
+        qrResult.innerHTML = html;
+        return;
+      }
+
+      const win = draw.slice(2, 8);
+      const bonus = draw[8];
+      const ranks = ticket.games.map(g => qrRankOf(g.numbers, draw));
+      const total = ranks.reduce((sum, r) => sum + (r ? draw[8 + r] : 0), 0);
+      const winCount = ranks.filter(Boolean).length;
+
+      html += `<div class="qr-draw">
+          <div class="qr-round">${t('qr.round', { round: draw[0], date: draw[1] })}</div>
+          <div class="balls-list">${qrBallsHtml(win)}<div class="ball ${getBallClass(bonus)} bonus-first" style="animation-delay: 0.24s">${bonus}</div></div>
+        </div>`;
+      html += winCount
+        ? `<div class="qr-summary win">🎉 ${t('qr.win', { count: winCount, amount: formatWon(total) })}</div>`
+        : `<div class="qr-summary">${t('qr.lose')}</div>`;
+
+      ticket.games.forEach((g, i) => {
+        const rank = ranks[i];
+        const cls = n => (win.includes(n) ? '' : (rank === 2 && n === bonus ? 'qr-bonus-hit' : 'qr-miss'));
+        // 당첨금은 글자 길이가 회차마다 달라 공 크기가 들쭉날쭉해지지 않도록 공 아래 줄에 둔다
+        const rankHtml = rank
+          ? `<div class="qr-rank hit">${t('qr.rank', { rank })}</div><div class="qr-prize">${formatWon(draw[8 + rank])}</div>`
+          : `<div class="qr-rank">${t('qr.miss')}</div>`;
+        html += `<div class="lotto-game-row qr-row"><div class="game-tag">${labels[i]}</div><div class="balls-list">${qrBallsHtml(g.numbers, cls)}</div>${rankHtml}</div>`;
+      });
+
+      // 당첨금 지급 기한: 지급 개시일(추첨 다음 날)부터 1년
+      const deadline = new Date(draw[1] + 'T00:00:00');
+      deadline.setFullYear(deadline.getFullYear() + 1);
+      deadline.setDate(deadline.getDate() + 1);
+      if (winCount && new Date() > deadline) html += `<p class="qr-note">${t('qr.expired')}</p>`;
+      if (ranks.some(r => r >= 1 && r <= 3)) html += `<p class="qr-note">${t('qr.bigPrize')}</p>`;
+      html += `<p class="qr-note">${t('qr.disclaimer')}</p>`;
+      qrResult.innerHTML = html;
+    }
+
+    async function showQrTicket(ticket) {
+      stopQrCamera();
+      playPopSound(880);
+      setQrState({ status: 'loading', ticket });
+      try {
+        await loadLottoDraws();
+      } catch (e) {
+        setQrState({ status: 'error', errorKey: 'qr.errData' });
+        return;
+      }
+      setQrState({ status: 'result', ticket });
+      const draw = qrDraws.get(ticket.round);
+      if (draw && ticket.games.some(g => qrRankOf(g.numbers, draw))) triggerConfetti();
+    }
+
+    function handleQrText(text) {
+      const ticket = parseLottoQr(text);
+      if (ticket) {
+        showQrTicket(ticket);
+        return true;
+      }
+      if (text !== qrLastText) {
+        qrLastText = text;
+        setQrState({ status: qrState.status, errorKey: 'qr.errNotLotto' });
+      }
+      return false;
+    }
+
+    async function scanQrFrame() {
+      qrScanTimer = null;
+      if (!qrStream || qrState.status === 'result' || qrState.status === 'loading') return;
+      if (qrVideo.readyState >= 2 && qrVideo.videoWidth) {
+        const vw = qrVideo.videoWidth;
+        const vh = qrVideo.videoHeight;
+        const side = Math.min(vw, vh) * QR_SCAN_AREA;
+        drawToQrCanvas(qrVideo, (vw - side) / 2, (vh - side) / 2, side, side, Math.min(640, side));
+        try {
+          const text = await decodeQrCanvas(false);
+          if (text && handleQrText(text)) return;
+        } catch (e) {
+          // jsQR을 못 받은 경우: 사진으로 확인하도록 안내
+          stopQrCamera();
+          setQrState({ status: 'nocamera', errorKey: 'qr.errLib' });
+          return;
+        }
+      }
+      if (qrStream) qrScanTimer = setTimeout(scanQrFrame, QR_SCAN_INTERVAL);
+    }
+
+    async function startQrCamera() {
+      stopQrCamera();
+      qrLastText = '';
+      setQrState({ status: 'starting', ticket: null });
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setQrState({ status: 'nocamera' });
+        return;
+      }
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: false,
+          video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }
+        });
+      } catch (e) {
+        setQrState({ status: 'nocamera' });
+        return;
+      }
+      if (qrModal.hidden || qrState.status !== 'starting') {
+        stream.getTracks().forEach(track => track.stop()); // 기다리는 사이 창을 닫았거나 사진을 골랐음
+        return;
+      }
+      qrStream = stream;
+      qrVideo.srcObject = stream;
+      try { await qrVideo.play(); } catch (e) {}
+      setQrState({ status: 'scanning' });
+      if (!qrDetector) loadJsQr().catch(() => {});
+      loadLottoDraws().catch(() => {});
+      scanQrFrame();
+    }
+
+    function stopQrCamera() {
+      clearTimeout(qrScanTimer);
+      qrScanTimer = null;
+      if (qrStream) qrStream.getTracks().forEach(track => track.stop());
+      qrStream = null;
+      qrVideo.srcObject = null;
+    }
+
+    function loadImageFile(file) {
+      if (window.createImageBitmap) {
+        return createImageBitmap(file, { imageOrientation: 'from-image' }).catch(() => createImageBitmap(file));
+      }
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => { URL.revokeObjectURL(img.src); resolve(img); };
+        img.onerror = reject;
+        img.src = URL.createObjectURL(file);
+      });
+    }
+
+    // 사진: 통째로 한 번 읽고, 못 찾으면 사진을 겹치게 나눈 조각을 크게 키워 가며 다시 읽는다 (QR이 작게 찍힌 사진 대비)
+    async function readQrFromPhoto(file) {
+      stopQrCamera();
+      setQrState({ status: 'reading', ticket: null });
+      let image;
+      try {
+        image = await loadImageFile(file);
+      } catch (e) {
+        setQrState({ status: 'error', errorKey: 'qr.errPhoto' });
+        return;
+      }
+      const w = image.width;
+      const h = image.height;
+      const regions = [[0, 0, 1, 1200]];
+      [2, 3, 4].forEach(n => {
+        const size = 2 / (n + 1);
+        for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) regions.push([i / (n + 1), j / (n + 1), size, 1000]);
+      });
+      let sawOtherQr = false;
+      try {
+        for (const [fx, fy, size, longest] of regions) {
+          drawToQrCanvas(image, fx * w, fy * h, size * w, size * h, longest);
+          const text = await decodeQrCanvas(true);
+          if (!text) continue;
+          const ticket = parseLottoQr(text);
+          if (ticket) { showQrTicket(ticket); return; }
+          sawOtherQr = true;
+        }
+      } catch (e) {
+        setQrState({ status: 'error', errorKey: 'qr.errLib' });
+        return;
+      }
+      setQrState({ status: 'error', errorKey: sawOtherQr ? 'qr.errNotLotto' : 'qr.errPhoto' });
+    }
+
+    function openQrModal() {
+      qrModal.hidden = false;
+      document.addEventListener('keydown', onQrKeydown);
+      document.getElementById('qr-close').focus();
+      playPopSound(620);
+      startQrCamera();
+    }
+
+    function closeQrModal() {
+      stopQrCamera();
+      qrModal.hidden = true;
+      document.removeEventListener('keydown', onQrKeydown);
+      btnQrCheck.focus();
+    }
+
+    function onQrKeydown(event) {
+      if (event.key === 'Escape') closeQrModal();
+    }
+
+    btnQrCheck.addEventListener('click', openQrModal);
+    document.getElementById('qr-close').addEventListener('click', closeQrModal);
+    qrModal.addEventListener('click', event => { if (event.target === qrModal) closeQrModal(); });
+    qrRescanBtn.addEventListener('click', startQrCamera);
+    qrFileInput.addEventListener('change', () => {
+      const file = qrFileInput.files && qrFileInput.files[0];
+      qrFileInput.value = ''; // 같은 사진을 다시 골라도 change가 오도록
+      if (file) readQrFromPhoto(file);
+    });
+    // 다른 앱으로 넘어가면 카메라를 끈다
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && qrStream) {
+        stopQrCamera();
+        setQrState({ status: 'nocamera', errorKey: 'qr.paused' });
+      }
+    });
+
+    /* ========================================================
        7. 토스트 메시지
        ======================================================== */
     let toastTimeout;
@@ -3887,6 +4647,7 @@
       renderTarotCards();
       renderTarotResult();
       renderContactStatus();
+      renderQr();
 
       try { localStorage.setItem('app-lang', currentLang); } catch (e) {}
     }
