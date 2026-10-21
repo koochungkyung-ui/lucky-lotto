@@ -1,4 +1,4 @@
-# 행운의 로또 번호 추첨기 & 포춘 스케치북
+# 행운의 로또 번호 생성기 & 포춘 스케치북
 
 빌드 도구 없이 `index.html` 한 파일(HTML·CSS·JS)로 만든 정적 웹앱입니다. 화면 하나에 탭 5개(🍀 로또 · 🔮 운세 · 🃏 타로 · ✏️ 스케치북 · 📮 제휴)가 있고, 한국어·영어·중국어·일본어를 지원합니다.
 
@@ -130,7 +130,7 @@
 ## 설치형 웹앱 (PWA)
 
 - `manifest.webmanifest`(앱 이름·아이콘·색상), `sw.js`(서비스 워커), `icons/`(클로버 아이콘)로 구성됩니다. 세 HTML의 `<head>`에 manifest·아이콘 태그가 있고, 서비스 워커는 `index.html` 스크립트 끝과 `page.js`에서 등록합니다.
-- `sw.js`는 페이지(HTML)는 네트워크를 먼저 쓰고(배포하면 바로 반영), 나머지 파일과 Google 글꼴은 캐시를 먼저 씁니다. 그래서 `page.css`·`page.js`·아이콘을 고치면 **`CACHE` 이름의 숫자(`lucky-lotto-v1`)를 올려야** 방문자에게 새 파일이 갑니다. 미리 저장하는 목록(`PRECACHE`)도 함께 맞춥니다.
+- `sw.js`는 페이지(HTML)는 네트워크를 먼저 쓰고(배포하면 바로 반영), 나머지 파일과 Google 글꼴은 캐시를 먼저 씁니다. 그래서 `page.css`·`page.js`·아이콘·`manifest.webmanifest`를 고치면 **`CACHE` 이름의 숫자(지금 `lucky-lotto-v2`)를 올려야** 방문자에게 새 파일이 갑니다. 미리 저장하는 목록(`PRECACHE`)도 함께 맞춥니다.
 - `PRECACHE`에는 Cloudflare 주소 규칙대로 `.html` 없이 `/about`, `/privacy`를 씁니다. 목록 중 하나라도 404가 나면 서비스 워커 설치가 통째로 실패합니다.
 - 아이콘은 SVG를 resvg로 PNG로 바꿔 만들었습니다(192, 512, maskable 512, apple-touch 180). maskable 아이콘은 그림이 가운데 80% 안에 들어가야 합니다.
 - manifest의 앱 이름은 한국어 하나입니다(manifest는 언어별로 바꿀 수 없음).
@@ -138,8 +138,9 @@
 
 ## 공유 미리보기 이미지
 
-- `og-image.png`는 1200×630입니다. SVG를 resvg(`@resvg/resvg-js`)와 Pretendard 글꼴로 PNG로 바꿔서 만들었습니다.
-- Pretendard에는 한자·가나가 없어서, 이미지 안에서는 "KO · EN · ZH · JA" 같은 영문 표기를 씁니다.
+- `og-image.png`는 1200×630입니다. 처음에는 SVG를 resvg(`@resvg/resvg-js`)와 Pretendard 글꼴로 만들었고, 2026-10-21 이름을 "행운의 로또 번호 생성기"로 바꾸면서 HTML(Noto Sans KR)을 Edge 헤드리스로 찍어 다시 만들었습니다(NEW 📷 QR 당첨 확인 표시 포함).
+- 이미지 안의 언어 표기는 "KO · EN · ZH · JA"처럼 영문으로 씁니다.
+- 사이트 이름: 한국어 "행운의 로또 번호 생성기", 영어 "Lucky Lotto Number Generator", 중국어 "幸运乐透号码生成器", 일본어 "ラッキーロト番号ジェネレーター"(2026-10-21 "추첨기"에서 변경, 원스토어 앱 이름과 맞춤). 앱 안의 "메인 추첨기" 같은 문구는 로또 탭 기능을 가리키므로 그대로 둡니다. 원스토어 앱의 홈 화면 아이콘 이름은 APK에 들어 있어 앱을 다시 빌드해야 바뀝니다.
 - 이미지를 바꾼 뒤 카카오톡에 예전 미리보기가 계속 나오면, [카카오 공유 디버거](https://developers.kakao.com/tool/debugger/sharing)에서 캐시를 초기화합니다.
 
 ## 안드로이드 앱 (TWA)
