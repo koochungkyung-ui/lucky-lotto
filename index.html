@@ -1335,6 +1335,24 @@
       box-shadow: 0 0 0 999px rgba(15, 23, 42, 0.35);
       pointer-events: none;
     }
+    .qr-zoom {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      min-width: 46px;
+      height: 34px;
+      padding: 0 10px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 9999px;
+      background: rgba(15, 23, 42, 0.6);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .qr-zoom[hidden] {
+      display: none;
+    }
     .qr-hint {
       font-size: 14px;
       font-weight: 600;
@@ -2125,6 +2143,7 @@
         <div class="qr-viewport" id="qr-viewport">
           <video id="qr-video" playsinline muted></video>
           <div class="qr-frame"></div>
+          <button type="button" class="qr-zoom" id="qr-zoom" hidden aria-label="확대 배율 바꾸기" data-i18n-aria="qr.zoom">2×</button>
         </div>
         <p class="qr-hint" id="qr-hint" aria-live="polite"></p>
       </div>
@@ -2198,7 +2217,8 @@
         'qr.photo': '사진으로 확인',
         'qr.privacy': '카메라 화면과 사진은 이 기기 안에서만 읽고, 어디에도 보내지 않아요.',
         'qr.starting': '카메라를 켜는 중이에요…',
-        'qr.scanning': '로또 용지 오른쪽 위 QR을 네모 칸 안에 맞춰 주세요.',
+        'qr.scanning': '용지에서 한 뼘쯤 떨어져 QR을 네모 칸에 맞춰 주세요. 흐리면 화면을 눌러 초점을 맞춰요.',
+        'qr.zoom': '확대 배율 바꾸기',
         'qr.noCamera': '카메라를 쓸 수 없어요. 카메라 권한을 허용하거나 사진으로 확인해 주세요.',
         'qr.reading': '사진에서 QR을 찾는 중이에요…',
         'qr.loading': '당첨번호를 불러오는 중이에요…',
@@ -2414,7 +2434,8 @@
         'qr.photo': 'Check from photo',
         'qr.privacy': 'Camera frames and photos are read only on this device and never sent anywhere.',
         'qr.starting': 'Turning on the camera…',
-        'qr.scanning': 'Fit the QR code (top right of the ticket) inside the square.',
+        'qr.scanning': 'Hold the phone about a hand\'s width from the ticket and fit the QR code in the square. Tap the screen to refocus if it looks blurry.',
+        'qr.zoom': 'Change zoom',
         'qr.noCamera': 'Camera unavailable. Allow camera access or check from a photo.',
         'qr.reading': 'Looking for the QR code in the photo…',
         'qr.loading': 'Loading winning numbers…',
@@ -2630,7 +2651,8 @@
         'qr.photo': '从照片查询',
         'qr.privacy': '相机画面和照片只在本设备上读取，不会发送到任何地方。',
         'qr.starting': '正在打开相机…',
-        'qr.scanning': '请将彩票右上角的二维码对准方框。',
+        'qr.scanning': '请将手机离彩票约一拃远，把二维码对准方框。画面模糊时点击屏幕重新对焦。',
+        'qr.zoom': '切换放大倍数',
         'qr.noCamera': '无法使用相机。请允许相机权限，或从照片查询。',
         'qr.reading': '正在照片中查找二维码…',
         'qr.loading': '正在加载中奖号码…',
@@ -2846,7 +2868,8 @@
         'qr.photo': '写真で確認',
         'qr.privacy': 'カメラ映像と写真はこの端末の中だけで読み取り、どこにも送信しません。',
         'qr.starting': 'カメラを起動しています…',
-        'qr.scanning': '用紙右上のQRコードを四角の中に合わせてください。',
+        'qr.scanning': '用紙から手のひら一つ分ほど離して、QRコードを四角に合わせてください。ぼやける場合は画面をタップしてピントを合わせます。',
+        'qr.zoom': 'ズーム倍率を切り替え',
         'qr.noCamera': 'カメラを使用できません。カメラへのアクセスを許可するか、写真で確認してください。',
         'qr.reading': '写真からQRコードを探しています…',
         'qr.loading': '当選番号を読み込んでいます…',
@@ -4248,6 +4271,7 @@
     const qrRescanBtn = document.getElementById('qr-rescan');
     const qrFileInput = document.getElementById('qr-file');
     const btnQrCheck = document.getElementById('btn-qr-check');
+    const qrZoomBtn = document.getElementById('qr-zoom');
     const qrCanvas = document.createElement('canvas');
     const qrCtx = qrCanvas.getContext('2d', { willReadFrequently: true });
 
@@ -4508,7 +4532,7 @@
             text = await decodeQrCanvas(false);
           }
           if (QR_DEBUG) {
-            qrDebugInfo = `${mode} · ${vw}×${vh} · ${Math.round(performance.now() - started)}ms`;
+            qrDebugInfo = `${mode} · ${vw}×${vh} · ${Math.round(performance.now() - started)}ms · ${qrCameraDebug()}`;
             qrHint.textContent = `${t(qrState.errorKey || 'qr.scanning')} [${qrDebugInfo}]`;
           }
           if (text && handleQrText(text)) return;
@@ -4522,16 +4546,108 @@
       if (qrStream) qrScanTimer = setTimeout(scanQrFrame, QR_SCAN_GAP);
     }
 
-    // 지원하는 폰에서는 연속 자동 초점을 켠다 (가까이 댄 용지에 초점이 맞도록)
+    // 카메라 조정. 로또 QR은 2cm 정도로 작아서 폰을 바짝 대면 카메라가 초점을 맞출 수 있는 거리보다 가까워진다.
+    // 그래서 줌을 지원하면 2배로 시작해 한 뼘쯤 떨어져도 QR이 크게 보이게 하고, 연속 자동 초점을 켠다
+    const QR_DEFAULT_ZOOM = 2;
+    let qrZoomLevels = [];   // 고를 수 있는 줌 배율 (지원하지 않으면 빈 배열)
+    let qrZoom = 1;
+
+    function qrTrackCaps(stream) {
+      const track = stream && stream.getVideoTracks()[0];
+      try {
+        return track && track.getCapabilities ? track.getCapabilities() : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    // 초점 정보를 알려 주는데 연속 자동 초점이 없으면 초점이 고정된 렌즈(광각 등)로 본다
+    function isFixedFocusCamera(stream) {
+      const caps = qrTrackCaps(stream);
+      return !!(caps && Array.isArray(caps.focusMode) && caps.focusMode.length && !caps.focusMode.includes('continuous'));
+    }
+
+    async function openQrCamera() {
+      const size = { width: { ideal: 1920 }, height: { ideal: 1080 } };
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { ...size, facingMode: { ideal: 'environment' } } });
+      if (!isFixedFocusCamera(stream)) return stream;
+
+      // 브라우저가 고른 뒷면 카메라가 자동 초점이 안 되면, 다른 뒷면 카메라 중 자동 초점이 되는 것을 찾는다
+      let devices = [];
+      try {
+        devices = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'videoinput');
+      } catch (e) {}
+      const currentId = stream.getVideoTracks()[0].getSettings().deviceId;
+      const score = d => (/\b0\b|camera2 0/.test(d.label) ? 2 : 0) + (/back|rear|environment|후면/i.test(d.label) ? 1 : 0);
+      const candidates = devices
+        .filter(d => d.deviceId !== currentId && !/front|user|전면/i.test(d.label))
+        .sort((a, b) => score(b) - score(a))
+        .slice(0, 4);
+      for (const device of candidates) {
+        let other;
+        try {
+          other = await navigator.mediaDevices.getUserMedia({ audio: false, video: { ...size, deviceId: { exact: device.deviceId } } });
+        } catch (e) {
+          continue;
+        }
+        if (!isFixedFocusCamera(other)) {
+          stream.getTracks().forEach(track => track.stop());
+          return other;
+        }
+        other.getTracks().forEach(track => track.stop());
+      }
+      return stream;
+    }
+
     function tuneQrCamera(stream) {
       const track = stream.getVideoTracks()[0];
-      if (!track || !track.getCapabilities) return;
-      try {
-        const caps = track.getCapabilities();
-        if (caps.focusMode && caps.focusMode.includes('continuous')) {
-          track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }).catch(() => {});
-        }
-      } catch (e) {}
+      const caps = qrTrackCaps(stream);
+      qrZoomLevels = [];
+      qrZoom = 1;
+      if (!track || !caps) return;
+      const advanced = {};
+      if (Array.isArray(caps.focusMode) && caps.focusMode.includes('continuous')) advanced.focusMode = 'continuous';
+      if (caps.zoom && caps.zoom.max >= 1.5 && caps.zoom.min <= 1) {
+        qrZoomLevels = [1, Math.min(QR_DEFAULT_ZOOM, caps.zoom.max)];
+        qrZoom = qrZoomLevels[1];
+        advanced.zoom = qrZoom;
+      }
+      if (Object.keys(advanced).length) track.applyConstraints({ advanced: [advanced] }).catch(() => {});
+    }
+
+    function setQrZoom(level) {
+      const track = qrStream && qrStream.getVideoTracks()[0];
+      if (!track) return;
+      qrZoom = level;
+      track.applyConstraints({ advanced: [{ zoom: level }] }).catch(() => {});
+      renderQrZoom();
+    }
+
+    function renderQrZoom() {
+      qrZoomBtn.hidden = qrZoomLevels.length < 2 || !qrStream;
+      qrZoomBtn.textContent = `${Number(qrZoom.toFixed(1))}×`;
+    }
+
+    // 화면을 누르면 초점을 다시 잡는다 (지원하는 폰만)
+    function refocusQrCamera() {
+      const track = qrStream && qrStream.getVideoTracks()[0];
+      const caps = qrTrackCaps(qrStream);
+      if (!track || !caps || !Array.isArray(caps.focusMode)) return;
+      if (caps.focusMode.includes('single-shot')) {
+        track.applyConstraints({ advanced: [{ focusMode: 'single-shot' }] })
+          .then(() => new Promise(r => setTimeout(r, 1200)))
+          .then(() => (caps.focusMode.includes('continuous') && qrStream ? track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }) : null))
+          .catch(() => {});
+      } else if (caps.focusMode.includes('continuous')) {
+        track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }).catch(() => {});
+      }
+    }
+
+    function qrCameraDebug() {
+      const track = qrStream && qrStream.getVideoTracks()[0];
+      const caps = qrTrackCaps(qrStream) || {};
+      const label = track ? track.label.replace(/\s+/g, ' ').slice(0, 28) : '';
+      return `${label} · focus ${(caps.focusMode || ['?']).join('/')} · zoom ${caps.zoom ? caps.zoom.min + '-' + caps.zoom.max : 'x'}`;
     }
 
     async function startQrCamera() {
@@ -4544,10 +4660,7 @@
       }
       let stream;
       try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          audio: false,
-          video: { facingMode: { ideal: 'environment' }, width: { ideal: 1920 }, height: { ideal: 1080 } }
-        });
+        stream = await openQrCamera();
       } catch (e) {
         setQrState({ status: 'nocamera' });
         return;
@@ -4558,6 +4671,7 @@
       }
       qrStream = stream;
       tuneQrCamera(stream);
+      renderQrZoom();
       qrVideo.srcObject = stream;
       try { await qrVideo.play(); } catch (e) {}
       setQrState({ status: 'scanning' });
@@ -4572,6 +4686,7 @@
       if (qrStream) qrStream.getTracks().forEach(track => track.stop());
       qrStream = null;
       qrVideo.srcObject = null;
+      qrZoomBtn.hidden = true;
     }
 
     function loadImageFile(file) {
@@ -4644,6 +4759,11 @@
     document.getElementById('qr-close').addEventListener('click', closeQrModal);
     qrModal.addEventListener('click', event => { if (event.target === qrModal) closeQrModal(); });
     qrRescanBtn.addEventListener('click', startQrCamera);
+    qrZoomBtn.addEventListener('click', () => {
+      const next = qrZoomLevels[(qrZoomLevels.indexOf(qrZoom) + 1) % qrZoomLevels.length];
+      if (next !== undefined) setQrZoom(next);
+    });
+    qrVideo.addEventListener('click', refocusQrCamera);
     qrFileInput.addEventListener('change', () => {
       const file = qrFileInput.files && qrFileInput.files[0];
       qrFileInput.value = ''; // 같은 사진을 다시 골라도 change가 오도록
