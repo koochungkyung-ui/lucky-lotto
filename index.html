@@ -4835,6 +4835,23 @@
         }
       }
       const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { ...size, facingMode: { ideal: 'environment' } } });
+      // 렌즈 이름에 번호가 있으면(안드로이드 크롬: "camera 0, facing back") 기본 렌즈인 0번을 먼저 쓴다.
+      // 갤럭시 S20 크롬은 기본으로 2번 렌즈(초점이 수동만 되는 렌즈)를 골라 QR이 흐렸다
+      if (!/\b0\b/.test(stream.getVideoTracks()[0].label)) {
+        let list = [];
+        try {
+          list = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'videoinput');
+        } catch (e) {}
+        const main = list.find(d => /\b0\b/.test(d.label) && !/front|user|전면/i.test(d.label));
+        if (main) {
+          stream.getTracks().forEach(track => track.stop()); // 카메라 두 개를 동시에 못 여는 폰이 있어 먼저 닫는다
+          try {
+            return await navigator.mediaDevices.getUserMedia({ audio: false, video: { ...size, deviceId: { exact: main.deviceId } } });
+          } catch (e) {
+            return navigator.mediaDevices.getUserMedia({ audio: false, video: { ...size, facingMode: { ideal: 'environment' } } });
+          }
+        }
+      }
       if (!isFixedFocusCamera(stream)) return stream;
 
       // 브라우저가 고른 뒷면 카메라가 자동 초점이 안 되면, 다른 뒷면 카메라 중 자동 초점이 되는 것을 찾는다
@@ -4900,6 +4917,33 @@
         advanced.zoom = qrZoom;
       }
       if (Object.keys(advanced).length) track.applyConstraints({ advanced: [advanced] }).catch(() => {});
+
+      // 자동 초점 없이 수동 초점만 되는 카메라(갤럭시 S20 크롬에서 확인)는 초점 거리를 직접 훑는다
+      const manualOnly = Array.isArray(caps.focusMode) && caps.focusMode.includes('manual') &&
+        !caps.focusMode.includes('continuous') && caps.focusDistance && caps.focusDistance.max > caps.focusDistance.min;
+      if (manualOnly) startQrFocusSweep(track, caps.focusDistance);
+    }
+
+    // 초점 거리를 가까운 쪽부터 먼 쪽까지 QR_FOCUS_STEP마다 바꿨다가 되돌아오기를 반복한다.
+    // 선명해지는 순간 스캔이 QR을 읽는다. 단위가 브라우저마다 달라 범위 전체를 훑고, 가까운 쪽을 더 촘촘히 본다
+    const QR_FOCUS_STEP = 300;
+    let qrFocusSweepTimer = null;
+
+    function startQrFocusSweep(track, range) {
+      const steps = 10;
+      const values = Array.from({ length: steps }, (_, i) => range.min + (range.max - range.min) * Math.pow(i / (steps - 1), 1.6));
+      const order = [...values, ...values.slice(1, -1).reverse()];
+      let i = 0;
+      const step = () => {
+        if (!qrStream || qrStream.getVideoTracks()[0] !== track) return;
+        // applyConstraints는 이전 조건을 덮어쓰므로 줌도 함께 넘긴다
+        const c = { focusMode: 'manual', focusDistance: order[i % order.length] };
+        if (qrZoomLevels.length) c.zoom = qrZoom;
+        track.applyConstraints({ advanced: [c] }).catch(() => {});
+        i++;
+        qrFocusSweepTimer = setTimeout(step, QR_FOCUS_STEP);
+      };
+      step();
     }
 
     // 뒷면 렌즈 목록 (카메라 권한을 받은 뒤라야 이름이 보인다). 렌즈가 2개 이상이면 🔄 버튼으로 차례로 바꾼다
@@ -5021,6 +5065,8 @@
       qrScanTimer = null;
       clearTimeout(qrNudgeTimer);
       qrNudgeTimer = null;
+      clearTimeout(qrFocusSweepTimer);
+      qrFocusSweepTimer = null;
       if (qrStream) qrStream.getTracks().forEach(track => track.stop());
       qrStream = null;
       qrVideo.srcObject = null;
