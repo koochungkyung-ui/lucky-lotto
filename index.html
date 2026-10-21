@@ -1504,6 +1504,20 @@
       opacity: 0;
       pointer-events: none;
     }
+    .qr-photo-thumb {
+      display: block;
+      max-width: 100%;
+      max-height: 180px;
+      margin: 0 auto;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--sub-border);
+      object-fit: contain;
+    }
+    .qr-diag {
+      font-size: 11px;
+      opacity: 0.8;
+      word-break: break-all;
+    }
     .qr-privacy {
       font-size: 12px;
       color: var(--text-muted);
@@ -2352,6 +2366,8 @@
         'qr.zoom': '확대 배율 바꾸기',
         'qr.lens': '렌즈 바꾸기',
         'qr.capture': '카메라 앱으로 찍기',
+        'qr.capturing': '카메라 앱에서 QR이 잘 보이게 찍어 주세요.',
+        'qr.photoTips': 'QR이 사진 가운데에 크고 선명하게 나오도록, 빛 반사 없이 다시 찍어 주세요.',
         'qr.noCamera': '카메라를 쓸 수 없어요. 카메라 권한을 허용하거나 사진으로 확인해 주세요.',
         'qr.reading': '사진에서 QR을 찾는 중이에요…',
         'qr.loading': '당첨번호를 불러오는 중이에요…',
@@ -2571,6 +2587,8 @@
         'qr.zoom': 'Change zoom',
         'qr.lens': 'Switch lens',
         'qr.capture': 'Take photo with camera app',
+        'qr.capturing': 'Take a photo with the QR code clearly visible in the camera app.',
+        'qr.photoTips': 'Retake the photo with the QR code large and sharp in the middle, without glare.',
         'qr.noCamera': 'Camera unavailable. Allow camera access or check from a photo.',
         'qr.reading': 'Looking for the QR code in the photo…',
         'qr.loading': 'Loading winning numbers…',
@@ -2790,6 +2808,8 @@
         'qr.zoom': '切换放大倍数',
         'qr.lens': '切换镜头',
         'qr.capture': '用相机应用拍照',
+        'qr.capturing': '请在相机应用中拍下清晰的二维码。',
+        'qr.photoTips': '请重新拍摄，让二维码在照片中间、足够大且清晰，并避免反光。',
         'qr.noCamera': '无法使用相机。请允许相机权限，或从照片查询。',
         'qr.reading': '正在照片中查找二维码…',
         'qr.loading': '正在加载中奖号码…',
@@ -3009,6 +3029,8 @@
         'qr.zoom': 'ズーム倍率を切り替え',
         'qr.lens': 'レンズを切り替え',
         'qr.capture': 'カメラアプリで撮影',
+        'qr.capturing': 'カメラアプリでQRコードがはっきり写るように撮影してください。',
+        'qr.photoTips': 'QRコードが写真の中央に大きくはっきり写るよう、反射を避けて撮り直してください。',
         'qr.noCamera': 'カメラを使用できません。カメラへのアクセスを許可するか、写真で確認してください。',
         'qr.reading': '写真からQRコードを探しています…',
         'qr.loading': '当選番号を読み込んでいます…',
@@ -4540,14 +4562,14 @@
 
     function renderQr() {
       const s = qrState.status;
-      const showScan = s === 'starting' || s === 'scanning' || s === 'nocamera' || s === 'reading' || s === 'error';
+      const showScan = s === 'starting' || s === 'scanning' || s === 'nocamera' || s === 'reading' || s === 'error' || s === 'capturing';
       qrModal.classList.toggle('fullscreen', s === 'starting' || s === 'scanning');
       qrScanBox.hidden = !showScan;
       qrViewport.hidden = !(s === 'starting' || s === 'scanning' || (s === 'error' && qrStream));
       qrRescanBtn.hidden = s === 'starting' || s === 'scanning';
 
       const hintKey = qrState.errorKey || {
-        starting: 'qr.starting', scanning: 'qr.scanning', nocamera: 'qr.noCamera', reading: 'qr.reading'
+        starting: 'qr.starting', scanning: 'qr.scanning', nocamera: 'qr.noCamera', reading: 'qr.reading', capturing: 'qr.capturing'
       }[s];
       qrHint.textContent = hintKey ? t(hintKey) : '';
       if (QR_DEBUG && hintKey) {
@@ -4557,6 +4579,12 @@
 
       if (s === 'loading') {
         qrResult.innerHTML = `<p class="qr-note">${t('qr.loading')}</p>`;
+        return;
+      }
+      if (s === 'error' && qrState.photo) {
+        qrResult.innerHTML = `${qrState.photo.url ? `<img class="qr-photo-thumb" src="${qrState.photo.url}" alt="">` : ''}
+          <p class="qr-note">${t('qr.photoTips')}</p>
+          <p class="qr-note qr-diag">${qrState.photo.info.replace(/[<>&]/g, '')}</p>`;
         return;
       }
       if (s !== 'result' || !qrState.ticket) {
@@ -4864,7 +4892,7 @@
     async function startQrCamera(deviceId) {
       stopQrCamera();
       qrLastText = '';
-      setQrState({ status: 'starting', ticket: null });
+      setQrState({ status: 'starting', ticket: null, photo: null });
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         setQrState({ status: 'nocamera' });
         return;
@@ -4914,39 +4942,74 @@
       });
     }
 
-    // 사진: 통째로 한 번 읽고, 못 찾으면 사진을 겹치게 나눈 조각을 크게 키워 가며 다시 읽는다 (QR이 작게 찍힌 사진 대비)
+    // 사진에서 못 읽으면 찍힌 사진과 진단 정보(크기·형식·시도 횟수·인식 방식)를 보여 준다. 원인을 찾기 위한 것
+    let qrPhotoUrl = null;
+    function failQrPhoto(errorKey, file, info) {
+      if (qrPhotoUrl) URL.revokeObjectURL(qrPhotoUrl);
+      qrPhotoUrl = file ? URL.createObjectURL(file) : null;
+      const text = [info.dims, info.size, info.type, `${info.tries} tries`, info.engine, info.other && `QR: ${info.other}`, info.error]
+        .filter(Boolean).join(' · ');
+      setQrState({ status: 'error', errorKey, photo: { url: qrPhotoUrl, info: text } });
+    }
+
+    // 사진: 내장 인식 기능에 원본을 먼저 주고, 못 찾으면 통째로(큰 크기·작은 크기) 읽은 뒤
+    // 사진을 겹치게 나눈 조각을 키워 가며 다시 읽는다 (QR이 작게 찍힌 사진 대비)
     async function readQrFromPhoto(file) {
       stopQrCamera();
-      setQrState({ status: 'reading', ticket: null });
+      setQrState({ status: 'reading', ticket: null, photo: null });
+      const info = {
+        dims: '', size: `${Math.round(file.size / 1024)}KB`, type: file.type || 'unknown type',
+        tries: 0, engine: qrDetector ? 'native+jsQR' : 'jsQR', other: '', error: ''
+      };
       let image;
       try {
         image = await loadImageFile(file);
       } catch (e) {
-        setQrState({ status: 'error', errorKey: 'qr.errPhoto' });
+        info.error = 'image decode failed';
+        failQrPhoto('qr.errPhoto', file, info);
         return;
       }
       const w = image.width;
       const h = image.height;
-      const regions = [[0, 0, 1, 1200]];
+      info.dims = `${w}×${h}`;
+      const accept = text => {
+        if (!text) return false;
+        const ticket = parseLottoQr(text);
+        if (ticket) {
+          showQrTicket(ticket);
+          return true;
+        }
+        info.other = String(text).slice(0, 40);
+        return false;
+      };
+
+      if (qrDetector) {
+        try {
+          info.tries++;
+          const codes = await qrDetector.detect(image);
+          if (codes.some(code => accept(code.rawValue))) return;
+        } catch (e) {
+          info.error = 'native: ' + (e.name || 'error');
+        }
+      }
+
+      const regions = [[0, 0, 1, 2000], [0, 0, 1, 1200]];
       [2, 3, 4].forEach(n => {
         const size = 2 / (n + 1);
         for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) regions.push([i / (n + 1), j / (n + 1), size, 1000]);
       });
-      let sawOtherQr = false;
       try {
         for (const [fx, fy, size, longest] of regions) {
-          drawToQrCanvas(image, fx * w, fy * h, size * w, size * h, longest);
-          const text = await decodeQrCanvas(true);
-          if (!text) continue;
-          const ticket = parseLottoQr(text);
-          if (ticket) { showQrTicket(ticket); return; }
-          sawOtherQr = true;
+          info.tries++;
+          drawToQrCanvas(image, fx * w, fy * h, size * w, size * h, Math.min(longest, Math.max(size * w, size * h) * 2));
+          if (accept(await decodeQrCanvas(true))) return;
         }
       } catch (e) {
-        setQrState({ status: 'error', errorKey: 'qr.errLib' });
+        info.error = 'jsQR load failed';
+        failQrPhoto('qr.errLib', file, info);
         return;
       }
-      setQrState({ status: 'error', errorKey: sawOtherQr ? 'qr.errNotLotto' : 'qr.errPhoto' });
+      failQrPhoto(info.other ? 'qr.errNotLotto' : 'qr.errPhoto', file, info);
     }
 
     // 폰의 뒤로 가기를 누르면 사이트를 벗어나지 않고 창만 닫히도록, 열 때 기록을 하나 넣어 둔다.
@@ -5008,6 +5071,11 @@
       });
     });
     qrLensBtn.addEventListener('click', switchQrLens);
+    // 카메라 앱을 열기 전에 스캔 카메라를 끈다 (카메라를 서로 잡으려 하거나 메모리가 모자라 사이트가 새로 고쳐지는 것을 줄임)
+    qrCaptureInput.addEventListener('click', () => {
+      stopQrCamera();
+      setQrState({ status: 'capturing', ticket: null, photo: null });
+    });
     // 다른 앱으로 넘어가면 카메라를 끈다
     document.addEventListener('visibilitychange', () => {
       if (document.hidden && qrStream) {
