@@ -1,6 +1,7 @@
 // 로또 6/45 당첨번호 파일(data/lotto645.json)을 만들거나 새 회차를 덧붙인다.
 // 사용: node scripts/update-lotto645.mjs
 // 동행복권 추첨결과 화면이 쓰는 주소에서 받는다. 한 번 요청하면 지정한 회차 근처 10회차(회차-5 ~ 회차+4)가 온다.
+// 지정한 회차가 최신보다 크면 빈 목록이 온다.
 // 이미 있는 회차는 다시 받지 않으므로, 매주 실행하면 새 회차만 추가된다.
 
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
@@ -59,9 +60,15 @@ async function main() {
   const startLast = rows.length ? Math.max(...byRound.keys()) : 0;
   let last = startLast;
 
-  // 마지막 회차 다음부터 10회차씩 받는다. 새 회차가 하나도 안 오면 최신까지 받은 것.
+  // 마지막 회차 다음부터 받는다. 최신 회차보다 큰 회차를 가운데로 요청하면 빈 목록이 오므로
+  // (최신 근처에서는 마지막 10회차로 맞춰 준다) 먼저 last+5를, 비어 있으면 last+1을 요청한다.
+  // 새 회차가 하나도 안 오면 최신까지 받은 것.
   while (true) {
-    const list = await fetchAround(last + 6);
+    let list = await fetchAround(last + 5);
+    if (!list.length) {
+      await sleep(DELAY_MS);
+      list = await fetchAround(last + 1);
+    }
     let added = 0;
     for (const it of list) {
       const row = toRow(it);
