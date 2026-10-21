@@ -511,7 +511,7 @@
       gap: 10px;
     }
 
-    .lottery-link {
+    .btn-sub.lottery-link { /* .btn-sub의 flex: 1보다 우선해야 세로로 찌그러지지 않는다 */
       flex: none;
       width: 100%;
       text-decoration: none;
@@ -1253,9 +1253,37 @@
     }
 
     /* QR 당첨 확인 창 */
+    .qr-check-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .qr-check-wrap[hidden] {
+      display: none;
+    }
     .qr-check-btn {
+      position: relative;
       flex: none;
       width: 100%;
+    }
+    .qr-check-btn:focus-within {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    .qr-live-btn {
+      padding: 4px 8px;
+      border: 0;
+      background: none;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+    }
+    .qr-live-btn:hover {
+      color: var(--primary);
     }
     .btn-sub[hidden] {
       display: none;
@@ -2061,10 +2089,15 @@
           </button>
         </div>
 
-        <!-- 한국 로또 용지 QR로 당첨 확인 (한국 로또를 골랐을 때만 보임) -->
-        <button class="btn-sub qr-check-btn" id="btn-qr-check">
-          <span>📷</span> <span data-i18n="qr.open">QR로 당첨 확인</span>
-        </button>
+        <!-- 한국 로또 용지 QR로 당첨 확인 (한국 로또를 골랐을 때만 보임).
+             기본 버튼은 폰 기본 카메라 앱을 바로 연다(초점이 확실함). 사이트 안 실시간 카메라는 아래 보조 버튼 -->
+        <div class="qr-check-wrap" id="qr-check-wrap">
+          <label class="btn-sub qr-check-btn" id="btn-qr-check">
+            <span>📷</span> <span data-i18n="qr.open">QR로 당첨 확인</span>
+            <input type="file" accept="image/*" capture="environment" class="qr-file-input" id="qr-capture-main">
+          </label>
+          <button type="button" class="qr-live-btn" id="btn-qr-live" data-i18n="qr.live">실시간 카메라로 스캔</button>
+        </div>
 
         <a class="btn-sub lottery-link" id="lottery-link" href="https://www.dhlottery.co.kr/" target="_blank" rel="noopener noreferrer">
           <span>🔗</span> <span id="lottery-link-text">동행복권 공식 홈페이지</span>
@@ -2366,6 +2399,7 @@
         'link.onestore': '원스토어에서 앱 받기',
 
         'qr.open': 'QR로 당첨 확인',
+        'qr.live': '실시간 카메라로 스캔',
         'qr.title': 'QR로 당첨 확인',
         'qr.close': '닫기',
         'qr.rescan': '카메라로 스캔',
@@ -2588,6 +2622,7 @@
         'link.onestore': 'Get the app on ONE store',
 
         'qr.open': 'Check ticket by QR',
+        'qr.live': 'Scan with live camera',
         'qr.title': 'Check ticket by QR',
         'qr.close': 'Close',
         'qr.rescan': 'Scan with camera',
@@ -2810,6 +2845,7 @@
         'link.onestore': '在 ONE store 下载应用',
 
         'qr.open': '扫码查询中奖',
+        'qr.live': '用实时相机扫描',
         'qr.title': '扫码查询中奖',
         'qr.close': '关闭',
         'qr.rescan': '用相机扫描',
@@ -3032,6 +3068,7 @@
         'link.onestore': 'ONE store でアプリを入手',
 
         'qr.open': 'QRで当選確認',
+        'qr.live': 'ライブカメラでスキャン',
         'qr.title': 'QRで当選確認',
         'qr.close': '閉じる',
         'qr.rescan': 'カメラでスキャン',
@@ -3413,7 +3450,7 @@
       });
       lotteryBadgeIcon.textContent = lottery.icon;
       colorLegend.style.display = key === 'kr' ? '' : 'none';
-      document.getElementById('btn-qr-check').hidden = key !== 'kr'; // QR 당첨 확인은 한국 로또 용지만 가능
+      document.getElementById('qr-check-wrap').hidden = key !== 'kr'; // QR 당첨 확인은 한국 로또 용지만 가능
       lotteryLink.href = lottery.site;
       refreshLotteryTexts();
 
@@ -4445,7 +4482,8 @@
     const qrResult = document.getElementById('qr-result');
     const qrRescanBtn = document.getElementById('qr-rescan');
     const qrFileInput = document.getElementById('qr-file');
-    const btnQrCheck = document.getElementById('btn-qr-check');
+    const qrCaptureMain = document.getElementById('qr-capture-main'); // 로또 탭 기본 버튼: 폰 카메라 앱을 바로 연다
+    const btnQrLive = document.getElementById('btn-qr-live');         // 보조 버튼: 사이트 안 실시간 카메라
     const qrZoomBtn = document.getElementById('qr-zoom');
     const qrLensBtn = document.getElementById('qr-lens');
     const qrCaptureInput = document.getElementById('qr-capture');
@@ -5045,11 +5083,20 @@
       try { history.pushState({ qrScanner: true }, ''); } catch (e) {}
     }
 
-    function openQrModal() {
+    let qrReturnFocus = null; // 창을 닫으면 포커스를 돌려줄 요소 (창을 연 버튼)
+
+    function showQrModal(opener) {
+      if (!qrModal.hidden) return;
+      qrReturnFocus = opener || null;
       qrModal.hidden = false;
       if (!qrIgnorePop) pushQrHistory(); // 지우는 중이면 popstate를 받은 뒤 넣는다
       document.addEventListener('keydown', onQrKeydown);
       document.getElementById('qr-close').focus();
+    }
+
+    // 보조 버튼: 사이트 안 실시간 카메라로 스캔
+    function openQrModal() {
+      showQrModal(btnQrLive);
       playPopSound(620);
       startQrCamera();
     }
@@ -5059,7 +5106,7 @@
       stopQrCamera();
       qrModal.hidden = true;
       document.removeEventListener('keydown', onQrKeydown);
-      btnQrCheck.focus();
+      if (qrReturnFocus) qrReturnFocus.focus();
       if (fromHistory !== true && history.state && history.state.qrScanner) {
         qrIgnorePop = true;
         history.back();
@@ -5070,7 +5117,7 @@
       if (event.key === 'Escape') closeQrModal();
     }
 
-    btnQrCheck.addEventListener('click', openQrModal);
+    btnQrLive.addEventListener('click', openQrModal);
     document.getElementById('qr-close').addEventListener('click', () => closeQrModal());
     window.addEventListener('popstate', () => {
       if (qrIgnorePop) {
@@ -5087,12 +5134,15 @@
       if (next !== undefined) setQrZoom(next);
     });
     qrVideo.addEventListener('click', refocusQrCamera);
-    // 사진 고르기와 카메라 앱으로 찍기는 같은 방식으로 읽는다
-    [qrFileInput, qrCaptureInput].forEach(input => {
+    // 사진 고르기와 카메라 앱으로 찍기는 같은 방식으로 읽는다.
+    // 로또 탭의 기본 버튼(qrCaptureMain)은 창이 닫힌 채로 카메라 앱을 여므로, 사진을 받으면 창을 연다
+    [qrFileInput, qrCaptureInput, qrCaptureMain].forEach(input => {
       input.addEventListener('change', () => {
         const file = input.files && input.files[0];
         input.value = ''; // 같은 사진을 다시 골라도 change가 오도록
-        if (file) readQrFromPhoto(file);
+        if (!file) return;
+        showQrModal(input === qrCaptureMain ? qrCaptureMain : null);
+        readQrFromPhoto(file);
       });
     });
     qrLensBtn.addEventListener('click', switchQrLens);
