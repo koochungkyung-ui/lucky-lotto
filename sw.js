@@ -1,7 +1,7 @@
 /* 서비스 워커: 오프라인에서도 앱이 열리도록 파일을 저장해 둡니다.
    페이지(HTML)는 항상 네트워크를 먼저 시도하므로, 배포하면 바로 새 버전이 보입니다.
    저장할 파일 목록이 바뀌면 CACHE 이름의 숫자를 올립니다. */
-const CACHE = 'lucky-lotto-v2';
+const CACHE = 'lucky-lotto-v3';
 const PRECACHE = [
   '/',
   '/about',
