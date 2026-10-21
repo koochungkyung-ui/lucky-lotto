@@ -1453,6 +1453,7 @@
     }
     .page-links a {
       color: inherit;
+      white-space: nowrap; /* 줄이 넘칠 때 링크 문구 중간이 아니라 링크 사이에서 줄바꿈 */
     }
     .guide-links {
       margin-top: 16px;
@@ -1864,7 +1865,7 @@
 
     <footer class="footer">
       <p data-i18n="footer">© 행운의 로또 번호 추첨기 & 포춘 스케치북 | 건전한 복권 문화를 응원합니다.</p>
-      <p class="page-links"><a href="about.html" data-i18n="link.about">사이트 소개</a> · <a href="privacy.html" data-i18n="link.privacy">개인정보처리방침</a> · <a href="lotto-odds.html" data-i18n="link.odds">로또 당첨 확률 알아보기</a> · <a href="world-lotteries.html" data-i18n="link.lotteries">해외 복권 비교</a> · <a href="tarot-cards.html" data-i18n="link.tarot">타로 카드 22장의 의미</a></p>
+      <p class="page-links"><a href="about.html" data-i18n="link.about">사이트 소개</a> · <a href="privacy.html" data-i18n="link.privacy">개인정보처리방침</a> · <a href="lotto-odds.html" data-i18n="link.odds">로또 당첨 확률 알아보기</a> · <a href="world-lotteries.html" data-i18n="link.lotteries">해외 복권 비교</a> · <a href="tarot-cards.html" data-i18n="link.tarot">타로 카드 22장의 의미</a> · <a href="https://onesto.re/0001010948" target="_blank" rel="noopener" data-i18n="link.onestore">원스토어에서 앱 받기</a></p>
     </footer>
 
   </div>
@@ -1916,6 +1917,7 @@
         'link.odds': '로또 당첨 확률 알아보기',
         'link.lotteries': '해외 복권 비교',
         'link.tarot': '타로 카드 22장의 의미',
+        'link.onestore': '원스토어에서 앱 받기',
 
         'lotto.title': '로또 번호 추천기',
         'lotto.subtitle': '버튼 하나로 당신만의 행운 번호를 뽑아보세요!',
@@ -2104,6 +2106,7 @@
         'link.odds': 'Lotto 6/45 odds explained',
         'link.lotteries': 'World lotteries compared',
         'link.tarot': 'Meanings of the 22 tarot cards',
+        'link.onestore': 'Get the app on ONE store',
 
         'lotto.title': 'Lotto Number Picker',
         'lotto.subtitle': 'Draw your own lucky numbers with a single tap!',
@@ -2292,6 +2295,7 @@
         'link.odds': '了解乐透中奖概率',
         'link.lotteries': '海外彩票比较',
         'link.tarot': '22 张塔罗牌的含义',
+        'link.onestore': '在 ONE store 下载应用',
 
         'lotto.title': '乐透选号器',
         'lotto.subtitle': '一键抽出属于你的幸运号码！',
@@ -2480,6 +2484,7 @@
         'link.odds': 'ロトの当選確率を知る',
         'link.lotteries': '海外宝くじ比較',
         'link.tarot': 'タロットカード 22 枚の意味',
+        'link.onestore': 'ONE store でアプリを入手',
 
         'lotto.title': 'ロト番号ジェネレーター',
         'lotto.subtitle': 'ボタンひとつであなただけのラッキーナンバーを！',
@@ -3899,14 +3904,22 @@
     applyLanguage(currentLang);
     setTimeout(resizeWhiteboard, 100);
 
-    // 앱 설치 버튼: Chrome·Edge·삼성 인터넷은 설치 창을 띄우고, 아이폰 Safari는 방법을 안내
+    // 앱 설치 버튼: 안드로이드는 원스토어 앱 페이지로 보내고, 그 밖의 Chrome·Edge는 설치 창을 띄우고, 아이폰 Safari는 방법을 안내
+    const ONESTORE_URL = 'https://onesto.re/0001010948';
     const installBtn = document.getElementById('install-btn');
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+    // 원스토어 앱(TWA) 안에서 열리면 첫 페이지의 referrer가 android-app://로 시작한다. 다른 페이지를 다녀와도 기억하도록 세션에 저장
+    let isTwa = document.referrer.startsWith('android-app://');
+    try {
+      if (isTwa) sessionStorage.setItem('twa', '1');
+      else isTwa = sessionStorage.getItem('twa') === '1';
+    } catch (e) {}
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true || isTwa;
     const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isAndroid = /android/i.test(navigator.userAgent);
     let deferredInstallPrompt = null;
 
-    if (!isStandalone && isIOS) installBtn.hidden = false;
+    if (!isStandalone && (isIOS || isAndroid)) installBtn.hidden = false;
 
     window.addEventListener('beforeinstallprompt', event => {
       event.preventDefault(); // 브라우저 기본 안내 대신 버튼으로 설치
@@ -3916,7 +3929,9 @@
 
     installBtn.addEventListener('click', async () => {
       playPopSound(620);
-      if (deferredInstallPrompt) {
+      if (isAndroid) {
+        window.open(ONESTORE_URL, '_blank', 'noopener');
+      } else if (deferredInstallPrompt) {
         const promptEvent = deferredInstallPrompt;
         deferredInstallPrompt = null;
         installBtn.hidden = true; // 설치 창은 한 번만 쓸 수 있음. 브라우저가 다시 허용하면 이벤트가 또 와서 다시 보임
