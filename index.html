@@ -1326,7 +1326,7 @@
       object-fit: cover;
       display: block;
     }
-    /* 가운데 네모 칸: 이 안의 화면만 읽는다 (스크립트의 QR_SCAN_AREA와 같은 비율) */
+    /* 가운데 네모 칸: QR을 맞출 위치 안내 (실제로는 화면 전체를 읽는다) */
     .qr-frame {
       position: absolute;
       inset: 12%;
@@ -4232,8 +4232,11 @@
     // 용지 QR 내용 예: http://qr.dhlottery.co.kr/?v=1246q081014224044q010209212739...<용지 고유번호>
     // v= 뒤에 회차 4자리, 그다음 게임마다 [영문 1글자 + 번호 6개(두 자리씩)]가 최대 5번 이어진다.
     // 영문은 q=자동, m=수동, s=반자동으로 알려져 있다. 당첨번호는 data/lotto645.json에서 읽는다.
-    const QR_SCAN_AREA = 0.76;      // 카메라 화면 가운데 이 비율만 읽는다 (.qr-frame의 inset 12%와 맞춤)
-    const QR_SCAN_INTERVAL = 180;   // 카메라 화면을 읽는 간격(ms)
+    // 카메라 읽기: 내장 BarcodeDetector는 원본 화면 전체를 그대로 넘기고(가장 빠르고 정확),
+    // jsQR은 전체 화면(줄여서)과 가운데 원본 화질을 번갈아 읽는다. 네모 칸(.qr-frame)은 맞추는 위치 안내용
+    const QR_CENTER_AREA = 0.6;     // jsQR이 원본 화질로 읽는 가운데 영역 비율
+    const QR_SCAN_GAP = 40;         // 한 번 읽고 다음 읽기까지 쉬는 시간(ms)
+    const QR_DEBUG = /[?&]qrdebug\b/.test(location.search); // 주소에 ?qrdebug를 붙이면 인식 방식·해상도·속도를 보여 줌
     const JSQR_URL = '/vendor/jsQR.js'; // jsQR 1.4.0 (Apache-2.0, vendor/jsQR-LICENSE.txt). 내장 QR 인식이 없는 기기에서만 받는다
 
     const qrModal = document.getElementById('qr-modal');
@@ -4257,9 +4260,21 @@
     let qrDrawsPromise = null;
     let jsQrPromise = null;
     let qrDetector = null;
+    let qrFrameToggle = false;
+    let qrDebugInfo = '';
     try {
-      if ('BarcodeDetector' in window) qrDetector = new BarcodeDetector({ formats: ['qr_code'] });
-    } catch (e) {}
+      if ('BarcodeDetector' in window) {
+        qrDetector = new BarcodeDetector({ formats: ['qr_code'] });
+        // 이름만 있고 QR을 못 읽는 브라우저도 있어서 지원 형식을 확인한다
+        if (BarcodeDetector.getSupportedFormats) {
+          BarcodeDetector.getSupportedFormats()
+            .then(formats => { if (!formats.includes('qr_code')) qrDetector = null; })
+            .catch(() => { qrDetector = null; });
+        }
+      }
+    } catch (e) {
+      qrDetector = null;
+    }
 
     function parseLottoQr(text) {
       const m = /[?&]v=(\d{4})((?:[a-z]\d{12}){1,5})/i.exec(String(text || ''));
@@ -4302,15 +4317,17 @@
       return jsQrPromise;
     }
 
-    // 캔버스에 그린 그림에서 QR 글자를 읽는다. 브라우저 내장 기능(안드로이드 Chrome 등)이 있으면 그것을, 없으면 jsQR을 쓴다
-    async function decodeQrCanvas(useBoth) {
+    // 그림에서 QR 글자를 읽는다. 브라우저 내장 기능(안드로이드 Chrome 등)이 있으면 그것을, 없으면 jsQR을 쓴다.
+    // source를 주면 내장 기능에 그것(카메라 화면 원본)을 넘기고, 없으면 qrCanvas를 읽는다
+    async function decodeQrCanvas(useBoth, source) {
       if (qrDetector) {
         try {
-          const codes = await qrDetector.detect(qrCanvas);
+          const codes = await qrDetector.detect(source || qrCanvas);
           if (codes.length) return codes[0].rawValue;
           if (!useBoth) return null;
         } catch (e) {
           qrDetector = null;
+          if (source) return null; // 다음 읽기부터 jsQR로
         }
       }
       const jsQR = await loadJsQr();
@@ -4366,6 +4383,9 @@
         starting: 'qr.starting', scanning: 'qr.scanning', nocamera: 'qr.noCamera', reading: 'qr.reading'
       }[s];
       qrHint.textContent = hintKey ? t(hintKey) : '';
+      if (QR_DEBUG && hintKey) {
+        qrHint.textContent += ` [${qrDetector ? 'native' : 'jsQR'}${qrDebugInfo ? ' · ' + qrDebugInfo : ''} · ${navigator.userAgent.match(/(SamsungBrowser|Chrome|Firefox|Version)\/[\d.]+/)?.[0] || ''}]`;
+      }
       qrHint.classList.toggle('error', !!qrState.errorKey || s === 'nocamera');
 
       if (s === 'loading') {
@@ -4468,10 +4488,29 @@
       if (qrVideo.readyState >= 2 && qrVideo.videoWidth) {
         const vw = qrVideo.videoWidth;
         const vh = qrVideo.videoHeight;
-        const side = Math.min(vw, vh) * QR_SCAN_AREA;
-        drawToQrCanvas(qrVideo, (vw - side) / 2, (vh - side) / 2, side, side, Math.min(640, side));
+        const started = performance.now();
+        let mode;
         try {
-          const text = await decodeQrCanvas(false);
+          let text;
+          if (qrDetector) {
+            mode = 'native';
+            text = await decodeQrCanvas(false, qrVideo);
+          } else {
+            qrFrameToggle = !qrFrameToggle;
+            if (qrFrameToggle) {
+              mode = 'jsQR full';
+              drawToQrCanvas(qrVideo, 0, 0, vw, vh, Math.min(960, Math.max(vw, vh)));
+            } else {
+              mode = 'jsQR center';
+              const side = Math.min(vw, vh) * QR_CENTER_AREA;
+              drawToQrCanvas(qrVideo, (vw - side) / 2, (vh - side) / 2, side, side, side);
+            }
+            text = await decodeQrCanvas(false);
+          }
+          if (QR_DEBUG) {
+            qrDebugInfo = `${mode} · ${vw}×${vh} · ${Math.round(performance.now() - started)}ms`;
+            qrHint.textContent = `${t(qrState.errorKey || 'qr.scanning')} [${qrDebugInfo}]`;
+          }
           if (text && handleQrText(text)) return;
         } catch (e) {
           // jsQR을 못 받은 경우: 사진으로 확인하도록 안내
@@ -4480,7 +4519,19 @@
           return;
         }
       }
-      if (qrStream) qrScanTimer = setTimeout(scanQrFrame, QR_SCAN_INTERVAL);
+      if (qrStream) qrScanTimer = setTimeout(scanQrFrame, QR_SCAN_GAP);
+    }
+
+    // 지원하는 폰에서는 연속 자동 초점을 켠다 (가까이 댄 용지에 초점이 맞도록)
+    function tuneQrCamera(stream) {
+      const track = stream.getVideoTracks()[0];
+      if (!track || !track.getCapabilities) return;
+      try {
+        const caps = track.getCapabilities();
+        if (caps.focusMode && caps.focusMode.includes('continuous')) {
+          track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }).catch(() => {});
+        }
+      } catch (e) {}
     }
 
     async function startQrCamera() {
@@ -4495,7 +4546,7 @@
       try {
         stream = await navigator.mediaDevices.getUserMedia({
           audio: false,
-          video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }
+          video: { facingMode: { ideal: 'environment' }, width: { ideal: 1920 }, height: { ideal: 1080 } }
         });
       } catch (e) {
         setQrState({ status: 'nocamera' });
@@ -4506,6 +4557,7 @@
         return;
       }
       qrStream = stream;
+      tuneQrCamera(stream);
       qrVideo.srcObject = stream;
       try { await qrVideo.play(); } catch (e) {}
       setQrState({ status: 'scanning' });
