@@ -81,17 +81,27 @@ async function main() {
 
   if (draws.length === rows.length) {
     console.log(`새 회차 없음 (최신 ${last}회)`);
-    return;
+  } else {
+    const out = { fields: FIELDS, latest: draws.at(-1)[0], draws };
+    // 회차마다 한 줄로 써서 git diff에서 추가된 회차가 잘 보이게 한다
+    const text = '{\n' +
+      `  "fields": ${JSON.stringify(out.fields)},\n` +
+      `  "latest": ${out.latest},\n` +
+      '  "draws": [\n' + draws.map(r => '    ' + JSON.stringify(r)).join(',\n') + '\n  ]\n}\n';
+    await mkdir(dirname(FILE), { recursive: true });
+    await writeFile(FILE, text);
+    console.log(`${draws.length - rows.length}개 회차 추가 (${startLast + 1}~${out.latest}회), 파일: data/lotto645.json`);
   }
-  const out = { fields: FIELDS, latest: draws.at(-1)[0], draws };
-  // 회차마다 한 줄로 써서 git diff에서 추가된 회차가 잘 보이게 한다
-  const text = '{\n' +
-    `  "fields": ${JSON.stringify(out.fields)},\n` +
-    `  "latest": ${out.latest},\n` +
-    '  "draws": [\n' + draws.map(r => '    ' + JSON.stringify(r)).join(',\n') + '\n  ]\n}\n';
-  await mkdir(dirname(FILE), { recursive: true });
-  await writeFile(FILE, text);
-  console.log(`${draws.length - rows.length}개 회차 추가 (${startLast + 1}~${out.latest}회), 파일: data/lotto645.json`);
+
+  // --check-fresh: 최신 회차 추첨일이 한국 날짜로 8일 이상 지났으면 실패로 끝낸다 (새 회차를 못 받아온 것).
+  // 토요일 밤 실행에서는 지난 회차가 7일 전이라 통과하고, 일요일 아침에도 새 회차가 없으면 8일이 되어 알린다
+  if (process.argv.includes('--check-fresh')) {
+    const latestDate = draws.at(-1)[1];
+    const todayKst = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+    const days = Math.round((Date.parse(todayKst) - Date.parse(latestDate)) / 86400000);
+    if (days >= 8) throw new Error(`최신 회차(${draws.at(-1)[0]}회, ${latestDate})가 ${days}일 전입니다. 새 회차를 받아오지 못했습니다.`);
+    console.log(`최신 회차 ${draws.at(-1)[0]}회 (${latestDate}, ${days}일 전)`);
+  }
 }
 
 main().catch(err => { console.error(err.message); process.exit(1); });

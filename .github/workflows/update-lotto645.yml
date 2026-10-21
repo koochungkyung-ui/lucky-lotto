@@ -1,0 +1,49 @@
+# 매주 토요일 로또 6/45 추첨(20:35 KST) 뒤에 새 회차 당첨번호를 data/lotto645.json에 덧붙이고 main에 push한다.
+# push하면 Cloudflare Pages가 자동으로 배포한다. 새 회차가 없으면 아무것도 하지 않는다.
+# 일요일 아침에도 새 회차를 못 받았으면 실패로 끝나 GitHub가 메일로 알린다(scripts/update-lotto645.mjs --check-fresh).
+name: 로또 당첨번호 갱신
+
+on:
+  schedule:
+    # GitHub 예약 실행은 UTC 기준이고 몇십 분 늦을 수 있다
+    - cron: '0 12 * * 6'   # 토 21:00 KST
+    - cron: '0 14 * * 6'   # 토 23:00 KST (첫 실행 때 아직 결과가 없었을 때 대비)
+    - cron: '0 0 * * 0'    # 일 09:00 KST (마지막 확인, 그래도 없으면 실패로 알림)
+  workflow_dispatch:       # Actions 화면에서 직접 실행
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-lotto645
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: 새 회차 받기
+        run: node scripts/update-lotto645.mjs
+
+      - name: 바뀌었으면 커밋하고 push
+        run: |
+          if git diff --quiet -- data/lotto645.json; then
+            echo "새 회차 없음"
+            exit 0
+          fi
+          latest=$(node -p "require('./data/lotto645.json').latest")
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/lotto645.json
+          git commit -m "로또 6/45 ${latest}회 당첨번호 추가 (자동)"
+          git push
+
+      - name: 데이터가 최신인지 확인
+        run: node scripts/update-lotto645.mjs --check-fresh
