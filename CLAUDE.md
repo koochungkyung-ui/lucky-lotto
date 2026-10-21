@@ -129,8 +129,8 @@
 
 ## 설치형 웹앱 (PWA)
 
-- `manifest.webmanifest`(앱 이름·아이콘·색상), `sw.js`(서비스 워커), `icons/`(클로버 아이콘)로 구성됩니다. 세 HTML의 `<head>`에 manifest·아이콘 태그가 있고, 서비스 워커는 `index.html` 스크립트 끝과 `page.js`에서 등록합니다.
-- `sw.js`는 페이지(HTML)는 네트워크를 먼저 쓰고(배포하면 바로 반영), 나머지 파일과 Google 글꼴은 캐시를 먼저 씁니다. 그래서 `page.css`·`page.js`·아이콘·`manifest.webmanifest`를 고치면 **`CACHE` 이름의 숫자(지금 `lucky-lotto-v2`)를 올려야** 방문자에게 새 파일이 갑니다. 미리 저장하는 목록(`PRECACHE`)도 함께 맞춥니다.
+- `manifest.webmanifest`(앱 이름·아이콘·색상), `sw.js`(서비스 워커), `icons/`(앱 아이콘)로 구성됩니다. 세 HTML의 `<head>`에 manifest·아이콘 태그가 있고, 서비스 워커는 `index.html` 스크립트 끝과 `page.js`에서 등록합니다.
+- `sw.js`는 페이지(HTML)는 네트워크를 먼저 쓰고(배포하면 바로 반영), 나머지 파일과 Google 글꼴은 캐시를 먼저 씁니다. 그래서 `page.css`·`page.js`·아이콘·`manifest.webmanifest`를 고치면 **`CACHE` 이름의 숫자(지금 `lucky-lotto-v3`)를 올려야** 방문자에게 새 파일이 갑니다. 미리 저장하는 목록(`PRECACHE`)도 함께 맞춥니다.
 - `PRECACHE`에는 Cloudflare 주소 규칙대로 `.html` 없이 `/about`, `/privacy`를 씁니다. 목록 중 하나라도 404가 나면 서비스 워커 설치가 통째로 실패합니다.
 - 아이콘(2026-10-21 변경): 보라색 그라데이션 위에 로또 공 세 개(7 노랑, 14 파랑, 23 빨강)와 클로버. 예전 아이콘은 클로버 하나였습니다. `icon.svg`가 원본이고, Edge 헤드리스로 PNG를 만들었습니다(192·512는 둥근 모서리+투명, maskable 512·apple-touch 180은 꽉 찬 사각형에 그림을 80%로 줄여 가운데). 공 숫자는 어느 기기에서나 같게 보이도록 Arial 굵게를 씁니다. maskable 아이콘은 그림이 가운데 80% 안에 들어가야 합니다.
 - 원스토어 앱(APK) 안의 아이콘은 아직 예전 클로버입니다. 다음 앱 업데이트 때 새 아이콘으로 빌드합니다(전체 이름 변경과 함께).
