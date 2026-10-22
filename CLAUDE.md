@@ -147,7 +147,7 @@
 - `sw.js`는 페이지(HTML)는 네트워크를 먼저 쓰고(배포하면 바로 반영), 나머지 파일과 Google 글꼴은 캐시를 먼저 씁니다. 그래서 `page.css`·`page.js`·아이콘·`manifest.webmanifest`를 고치면 **`CACHE` 이름의 숫자(지금 `lucky-lotto-v3`)를 올려야** 방문자에게 새 파일이 갑니다. 미리 저장하는 목록(`PRECACHE`)도 함께 맞춥니다.
 - `PRECACHE`에는 Cloudflare 주소 규칙대로 `.html` 없이 `/about`, `/privacy`를 씁니다. 목록 중 하나라도 404가 나면 서비스 워커 설치가 통째로 실패합니다.
 - 아이콘(2026-10-21 변경): 보라색 그라데이션 위에 로또 공 세 개(7 노랑, 14 파랑, 23 빨강)와 클로버. 예전 아이콘은 클로버 하나였습니다. `icon.svg`가 원본이고, Edge 헤드리스로 PNG를 만들었습니다(192·512는 둥근 모서리+투명, maskable 512·apple-touch 180은 꽉 찬 사각형에 그림을 80%로 줄여 가운데). 공 숫자는 어느 기기에서나 같게 보이도록 Arial 굵게를 씁니다. maskable 아이콘은 그림이 가운데 80% 안에 들어가야 합니다.
-- 원스토어 앱(APK)은 versionCode 2(2026-10-22 빌드)부터 새 아이콘입니다. 출시된 versionCode 1은 예전 클로버 아이콘입니다.
+- 원스토어 앱(APK)은 versionCode 2(2026-10-22 배포)부터 새 아이콘입니다. 그 전 versionCode 1은 예전 클로버 아이콘이었습니다.
 - manifest의 앱 이름은 한국어 하나입니다(manifest는 언어별로 바꿀 수 없음).
 - 📲 앱 설치 버튼(`#install-btn`)은 다크모드 버튼과 함께 오른쪽 위 `.top-actions` 안에 있습니다. 처음엔 `hidden`이고, 브라우저가 `beforeinstallprompt`를 보낼 때(Chrome·Edge·삼성 인터넷)나 아이폰·아이패드일 때만 보입니다. 아이폰은 설치 창이 없어서 "공유 → 홈 화면에 추가" 안내 토스트(`install.ios`)를 띄웁니다. 이미 설치된 앱으로 열면 보이지 않습니다. 폰에서는 아이콘만 보입니다.
 
@@ -155,7 +155,7 @@
 
 - `og-image.png`는 1200×630입니다. 처음에는 SVG를 resvg(`@resvg/resvg-js`)와 Pretendard 글꼴로 만들었고, 2026-10-21 이름을 "행운의 로또 번호 생성기"로 바꾸면서 HTML(Noto Sans KR)을 Edge 헤드리스로 찍어 다시 만들었습니다(NEW 📷 QR 당첨 확인 표시 포함).
 - 이미지 안의 언어 표기는 "KO · EN · ZH · JA"처럼 영문으로 씁니다.
-- 사이트 이름: 한국어 "행운의 로또 번호 생성기", 영어 "Lucky Lotto Number Generator", 중국어 "幸运乐透号码生成器", 일본어 "ラッキーロト番号ジェネレーター"(2026-10-21 "추첨기"에서 변경, 원스토어 앱 이름과 맞춤). 앱 안의 "메인 추첨기" 같은 문구는 로또 탭 기능을 가리키므로 그대로 둡니다. 원스토어 앱(APK) 안의 이름은 다시 빌드해야 바뀝니다. 출시된 versionCode 1은 전체 이름(설정 화면의 앱 이름)이 "행운의 로또 번호 추첨기 & 포춘 스케치북"이고, 2026-10-22에 빌드한 versionCode 2(1.0.1)부터 "행운의 로또 번호 생성기 & 포춘 스케치북"입니다. 홈 화면 이름(launcherName)은 둘 다 "행운 로또"입니다.
+- 사이트 이름: 한국어 "행운의 로또 번호 생성기", 영어 "Lucky Lotto Number Generator", 중국어 "幸运乐透号码生成器", 일본어 "ラッキーロト番号ジェネレーター"(2026-10-21 "추첨기"에서 변경, 원스토어 앱 이름과 맞춤). 앱 안의 "메인 추첨기" 같은 문구는 로또 탭 기능을 가리키므로 그대로 둡니다. 원스토어 앱(APK) 안의 이름은 다시 빌드해야 바뀝니다. versionCode 1은 전체 이름(설정 화면의 앱 이름)이 "행운의 로또 번호 추첨기 & 포춘 스케치북"이었고, 2026-10-22에 배포한 versionCode 2(1.0.1)부터 "행운의 로또 번호 생성기 & 포춘 스케치북"입니다. 홈 화면 이름(launcherName)은 둘 다 "행운 로또"입니다.
 - 이미지를 바꾼 뒤 카카오톡에 예전 미리보기가 계속 나오면, [카카오 공유 디버거](https://developers.kakao.com/tool/debugger/sharing)에서 캐시를 초기화합니다.
 
 ## 안드로이드 앱 (TWA)
@@ -181,7 +181,7 @@
   - `NoDefaultCurrentDirectoryInExePath` 환경 변수를 지움(Claude Code가 1로 설정해 두어 Bubblewrap이 `gradlew.bat`을 못 찾음)
   - `BUBBLEWRAP_KEYSTORE_PASSWORD`·`BUBBLEWRAP_KEY_PASSWORD`는 `KEYSTORE-PASSWORD.txt`에서 읽어 넣고, **출력에서 비밀번호를 가림**(서명 명령이 실패하면 Bubblewrap이 비밀번호를 그대로 출력함)
 - 빌드 후 확인: `aapt2 dump badging`으로 versionCode·이름, `apksigner verify --print-certs`로 서명 SHA-256이 `7DACDDB7…B0B1A3`(assetlinks와 같음)인지 확인합니다.
-- 출시 기록: versionCode 1 / 1.0.0(2026-10-20, Codespace 빌드, 이름 "…추첨기 & 포춘 스케치북", 예전 클로버 아이콘) → versionCode 2 / 1.0.1(2026-10-22, PC 빌드, 이름 "행운의 로또 번호 생성기 & 포춘 스케치북", 새 아이콘). versionCode 2 파일은 다운로드 폴더 `app-release-v2`에 있고, 2026-10-22 원스토어에 "파일 업데이트"(기본 지원단말 유지)로 올려 검증을 요청했습니다(첨부: 가짜 1246회 용지 QR이 든 `QR-test-guide.pdf`, 원스토어 첨부는 문서 형식만 받음).
+- 출시 기록: versionCode 1 / 1.0.0(2026-10-20, Codespace 빌드, 이름 "…추첨기 & 포춘 스케치북", 예전 클로버 아이콘) → versionCode 2 / 1.0.1(2026-10-22, PC 빌드, 이름 "행운의 로또 번호 생성기 & 포춘 스케치북", 새 아이콘). versionCode 2 파일은 다운로드 폴더 `app-release-v2`에 있고, 2026-10-22 원스토어에 "파일 업데이트"(기본 지원단말 유지)로 올려 검증을 요청했고(첨부: 가짜 1246회 용지 QR이 든 `QR-test-guide.pdf`, 원스토어 첨부는 문서 형식만 받음), **같은 날 검증을 통과해 상용 바이너리(판매 중)가 versionCode 2 / 1.0.1로 바뀌었습니다.**
 - `/.well-known/assetlinks.json`에 서명 키의 SHA-256 지문이 있어야 앱 위에 주소창이 안 보입니다. Google Play는 앱을 자체 키로 다시 서명하므로, Play Console의 "앱 서명 키 인증서" SHA-256도 이 파일에 추가합니다.
 
 ## Google Play 출시 준비 (2026-10-22, 진행 중)
