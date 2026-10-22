@@ -182,6 +182,8 @@
   - `BUBBLEWRAP_KEYSTORE_PASSWORD`·`BUBBLEWRAP_KEY_PASSWORD`는 `KEYSTORE-PASSWORD.txt`에서 읽어 넣고, **출력에서 비밀번호를 가림**(서명 명령이 실패하면 Bubblewrap이 비밀번호를 그대로 출력함)
 - 빌드 후 확인: `aapt2 dump badging`으로 versionCode·이름, `apksigner verify --print-certs`로 서명 SHA-256이 `7DACDDB7…B0B1A3`(assetlinks와 같음)인지 확인합니다.
 - 출시 기록: versionCode 1 / 1.0.0(2026-10-20, Codespace 빌드, 이름 "…추첨기 & 포춘 스케치북", 예전 클로버 아이콘) → versionCode 2 / 1.0.1(2026-10-22, PC 빌드, 이름 "행운의 로또 번호 생성기 & 포춘 스케치북", 새 아이콘). versionCode 2 파일은 다운로드 폴더 `app-release-v2`에 있고, 2026-10-22 원스토어에 "파일 업데이트"(기본 지원단말 유지)로 올려 검증을 요청했고(첨부: 가짜 1246회 용지 QR이 든 `QR-test-guide.pdf`, 원스토어 첨부는 문서 형식만 받음), **같은 날 검증을 통과해 상용 바이너리(판매 중)가 versionCode 2 / 1.0.1로 바뀌었습니다.**
+- 폰 확인(2026-10-22, 갤럭시 S20): 원스토어로 1.0.1 업데이트 후 아이콘·이름이 바뀌었고, 원스토어 "실행"과 홈 화면 아이콘 모두 전체 화면(주소창 없음)으로 열립니다. 업데이트 직후 첫 실행에서는 위에 브라우저 탭 막대(←, 돋보기, ⋮)가 잠깐 보였는데, 다시 여니 사라졌습니다(서명 확인이 끝나기 전 상태로 판단).
+- 앱 위에 탭 막대나 주소창이 계속 보이면 순서대로 확인합니다: ① `https://cloverpick.app/.well-known/assetlinks.json`이 200·`application/json`으로 열리는지 ② Google 확인 API(`https://digitalassetlinks.googleapis.com/v1/statements:list?source.web.site=https://cloverpick.app&relation=delegate_permission/common.handle_all_urls`)에 패키지와 지문이 나오는지 ③ 설치된 APK 서명 지문이 같은지 ④ 폰의 기본 브라우저가 Chrome인지, 앱을 강제 중지 후 인터넷이 켜진 상태에서 다시 여는지.
 - `/.well-known/assetlinks.json`에 서명 키의 SHA-256 지문이 있어야 앱 위에 주소창이 안 보입니다. Google Play는 앱을 자체 키로 다시 서명하므로, Play Console의 "앱 서명 키 인증서" SHA-256도 이 파일에 추가합니다.
 
 ## Google Play 출시 준비 (2026-10-22, 진행 중)
