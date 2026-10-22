@@ -181,7 +181,7 @@
   - `NoDefaultCurrentDirectoryInExePath` 환경 변수를 지움(Claude Code가 1로 설정해 두어 Bubblewrap이 `gradlew.bat`을 못 찾음)
   - `BUBBLEWRAP_KEYSTORE_PASSWORD`·`BUBBLEWRAP_KEY_PASSWORD`는 `KEYSTORE-PASSWORD.txt`에서 읽어 넣고, **출력에서 비밀번호를 가림**(서명 명령이 실패하면 Bubblewrap이 비밀번호를 그대로 출력함)
 - 빌드 후 확인: `aapt2 dump badging`으로 versionCode·이름, `apksigner verify --print-certs`로 서명 SHA-256이 `7DACDDB7…B0B1A3`(assetlinks와 같음)인지 확인합니다.
-- 출시 기록: versionCode 1 / 1.0.0(2026-10-20, Codespace 빌드, 이름 "…추첨기 & 포춘 스케치북", 예전 클로버 아이콘) → versionCode 2 / 1.0.1(2026-10-22, PC 빌드, 이름 "행운의 로또 번호 생성기 & 포춘 스케치북", 새 아이콘). versionCode 2 파일은 다운로드 폴더 `app-release-v2`에 있습니다(원스토어 업데이트 등록은 사용자가 함).
+- 출시 기록: versionCode 1 / 1.0.0(2026-10-20, Codespace 빌드, 이름 "…추첨기 & 포춘 스케치북", 예전 클로버 아이콘) → versionCode 2 / 1.0.1(2026-10-22, PC 빌드, 이름 "행운의 로또 번호 생성기 & 포춘 스케치북", 새 아이콘). versionCode 2 파일은 다운로드 폴더 `app-release-v2`에 있고, 2026-10-22 원스토어에 "파일 업데이트"(기본 지원단말 유지)로 올려 검증을 요청했습니다(첨부: 가짜 1246회 용지 QR이 든 `QR-test-guide.pdf`, 원스토어 첨부는 문서 형식만 받음).
 - `/.well-known/assetlinks.json`에 서명 키의 SHA-256 지문이 있어야 앱 위에 주소창이 안 보입니다. Google Play는 앱을 자체 키로 다시 서명하므로, Play Console의 "앱 서명 키 인증서" SHA-256도 이 파일에 추가합니다.
 
 ## Google Play 출시 준비 (2026-10-22, 진행 중)
@@ -192,6 +192,7 @@
 - 스토어 디자인은 앱 아이콘과 원스토어 그래픽에 맞춘 **보라색**(`#6366f1` → `#5b21b6` → `#7e22ce` → `#be3c8a`)입니다. SNS 채널(편의템)의 노랑·남색과 섞지 않습니다. 스크린샷의 로또 용지는 만든 가짜 번호(1246회)입니다.
 - 앱 콘텐츠 설문: 타겟층 만 18세 이상, 실제 돈 도박 없음(복권 주제는 있음), 광고는 사이트에 애드센스 광고가 실제로 보일 때만 "포함". 데이터 보안은 앱 화면이 사이트이므로 사이트가 쓰는 Google 애널리틱스·애드센스(앱 상호작용, 기기 ID)와 제휴 문의 폼(Formspree: 이름·이메일·메시지, 선택)을 신고하고, 카메라·사진·용지 번호는 기기 안에서만 처리해 수집하지 않음으로 답합니다. 개인정보처리방침과 내용을 맞춥니다.
 - 남은 일: D-U-N-S 발급 → Play Console 가입·인증 → AAB 업로드(versionCode 2 AAB는 PC에서 빌드해 둠, 위 "PC 빌드" 참고) → Play 앱 서명 키 SHA-256을 `assetlinks.json`에 추가.
+- **Google Android 개발자 인증(2027년 전까지 필수)**: Google 정책으로 Play 밖에서 배포하는 앱도 인증된 개발자 앱만 안드로이드 기기에 설치되도록 바뀝니다(안내 기준 한국 포함 대부분 국가 2027년부터, 미인증이면 새 설치가 막힐 수 있음). 원스토어 바이너리 화면에 이 앱이 "Android 개발자 인증: 미인증"으로 표시됩니다(2026-10-22 확인, 원스토어 안내: https://onestore-dev.gitbook.io/dev/help/faq/apps/developer-verification). 할 일: Play Console 조직 계정에서 신원 인증을 마친 뒤, 패키지 `app.cloverpick.lotto`와 원스토어 APK의 서명 키(SHA-256 `7D:AC:DD:B7:…:B0:B1:A3`, `assetlinks.json`과 같은 키)를 등록합니다. 정확한 메뉴와 날짜는 그때 Google·원스토어 공지로 다시 확인합니다. 지금 검증·판매에는 영향이 없습니다.
 - 이 PC에서 `puppeteer.launch`로 Edge가 실행되지 않을 때(2026-10-22부터): Edge를 `--headless=new --remote-debugging-port=9333 --user-data-dir=<임시 폴더>`로 직접 띄우고 `puppeteer.connect({ browserURL: 'http://127.0.0.1:9333' })`로 연결해 스크린샷을 찍습니다.
 - Apple App Store는 보류(사용자와 상의): 연 99달러, TWA 방식이 없어 새로 만들어야 하고, 웹사이트를 감싼 앱은 심사 지침 4.2로 거절되기 쉬워 네이티브 기능(카메라 QR, 위젯, 알림 등)이 필요합니다. 그동안 아이폰은 "홈 화면에 추가"로 씁니다.
 
