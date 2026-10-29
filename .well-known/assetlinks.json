@@ -5,7 +5,8 @@
       "namespace": "android_app",
       "package_name": "app.cloverpick.lotto",
       "sha256_cert_fingerprints": [
-        "7D:AC:DD:B7:C1:16:0E:4A:7F:A9:09:F0:58:8E:59:D0:BF:5C:D4:DC:58:C2:9F:6F:24:67:C0:C3:3F:B0:B1:A3"
+        "7D:AC:DD:B7:C1:16:0E:4A:7F:A9:09:F0:58:8E:59:D0:BF:5C:D4:DC:58:C2:9F:6F:24:67:C0:C3:3F:B0:B1:A3",
+        "F0:92:46:D8:A2:B1:60:BB:B1:D0:41:86:3D:AC:7F:0B:31:7E:1C:DD:20:F5:63:E2:EF:93:0C:F9:EB:92:95:C7"
       ]
     }
   }
