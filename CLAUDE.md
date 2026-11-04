@@ -200,9 +200,16 @@
 - 앱 위에 탭 막대나 주소창이 계속 보이면 순서대로 확인합니다: ① `https://cloverpick.app/.well-known/assetlinks.json`이 200·`application/json`으로 열리는지 ② Google 확인 API(`https://digitalassetlinks.googleapis.com/v1/statements:list?source.web.site=https://cloverpick.app&relation=delegate_permission/common.handle_all_urls`)에 패키지와 지문이 나오는지 ③ 설치된 APK 서명 지문이 같은지 ④ 폰의 기본 브라우저가 Chrome인지, 앱을 강제 중지 후 인터넷이 켜진 상태에서 다시 여는지.
 - `/.well-known/assetlinks.json`에 서명 키의 SHA-256 지문이 있어야 앱 위에 주소창이 안 보입니다. Google Play는 앱을 자체 키로 다시 서명하므로, Play Console의 "앱 서명 키 인증서" SHA-256도 이 파일에 추가합니다.
 
-## Google Play 출시 (2026-10-22 준비 → 2026-10-30 프로덕션 심사 제출)
+## Google Play 출시 (2026-10-22 준비 → 2026-10-30 프로덕션 심사 제출 → 2026-11-04 계정 해지, 이의신청 중)
 
-- 진행 상황(2026-10-30): **프로덕션 검토 중**. 관리형 게시는 꺼져 있어 통과하면 바로 공개(국가: 대한민국만). 결과 메일은 Play Console 계정 Gmail과 `contact@cloverpick.app`으로 옵니다. 통과 후 할 일: 스토어 링크(`play.google.com/store/apps/details?id=app.cloverpick.lotto`)를 사이트·인포크·편의템 채널에 추가, 원스토어 앱 Android 개발자 인증 등록(아래).
+- **개발자 계정 해지(2026-11-04)**: "onenewmanshop" 개발자 계정(소유자 Google 계정 wonnyumaen)이 해지됐습니다. 메일(no-reply-googleplay-developer@google.com, 받는 사람 koochungkyung Gmail과 `contact@cloverpick.app`)의 사유는 **"DDA 및 Play Console 요구사항 위반 – DDA 11.4(제공 정보가 최신·진실·정확해야 함)"**, 조직은 계정 정보가 **D&B 프로필과 일치**해야 한다는 내용이었고 "이 계정 또는 이전에 해지된 관련 계정" 문구가 들어 있었습니다.
+  - 원인으로 본 것: D&B 기록은 상호 **`onenewmanshop`**(영문, 개인사업자), 주소 `35 Jongam-ro 24-gil, Seongbuk-gu, Seoul 02798`(동·호수 없음)인데, Play Console의 조직 이름·주소를 가져오는 **Google 결제 프로필**에는 상호가 한글 **"원뉴맨샵"**, 주소가 한글(동·호수 포함)로 들어가 있었습니다. D-U-N-S와 전화번호는 같았습니다.
+  - 이전 가입 이력(사용자 확인): koochungkyung 계정과 wonnyumaen 계정에서 한 번씩 Play Console 가입을 시작했다가 **등록비를 내기 전에 직접 취소**했고, 해지 메일은 받은 적이 없습니다. 등록비를 낸 개발자 계정은 이번 하나뿐입니다.
+  - 조치: wonnyumaen으로 pay.google.com → 설정 → 결제 프로필의 **비즈니스 이름을 `onenewmanshop`으로 변경**(주소는 한글만 입력 가능해 그대로 둠, 같은 주소). "결제 서비스 사용자"의 기본 연락처(실명)는 사람 칸이라 바꾸지 않았습니다. 그 뒤 Play Console(wonnyumaen) → onenewmanshop → **이의신청**: 이유 "이 문제의 원인을 이해했으며 문제를 해결하겠습니다", 추가 연락처 koochungkyung Gmail로 제출(2026-11-05). 양식에는 설명·첨부 칸이 없었습니다.
+  - 기다리는 동안: 새 Play 개발자 계정을 만들지 않습니다(연결 계정으로 다시 해지될 수 있음). Google이 자료를 요청하면 사업자등록증(상호 원뉴맨샵), D&B 확인 화면(onenewmanshop·D-U-N-S), 영어 설명(같은 사업자의 한글·영문 표기 차이, 결제 프로필을 D&B와 맞춤, 이전 가입 2번은 결제 전 취소, 앱은 돈을 다루지 않는 QR 확인 도구)으로 답합니다. 이의신청 기한은 해지 알림 후 180일, 답은 보통 7일 안.
+  - 영향: 원스토어 앱·사이트는 영향 없음. Play 출시는 중단. 복구되면 계정 정보를 확인하고 심사를 다시 보내고, 거절되면 갤럭시 스토어를 먼저 하고 Android 개발자 인증(2027)은 Android Developer Console 등 다른 길을 알아봅니다. Google 계정(Gmail) 자체와 YouTube·애드센스 계정은 별개라 그대로 씁니다.
+  - 교훈: 조직으로 등록할 때는 결제 프로필의 법적 이름·주소를 **D&B 기록과 글자까지 같게**(영문 상호면 영문) 맞춘 뒤 가입합니다. 가입 중 "다른 계정 사용" 질문에는 결제 전 취소한 가입까지 모두 적습니다.
+- 진행 상황(2026-10-30, 해지 전): **프로덕션 검토 중**. 관리형 게시는 꺼져 있어 통과하면 바로 공개(국가: 대한민국만). 결과 메일은 Play Console 계정 Gmail과 `contact@cloverpick.app`으로 옵니다. 통과 후 할 일: 스토어 링크(`play.google.com/store/apps/details?id=app.cloverpick.lotto`)를 사이트·인포크·편의템 채널에 추가, 원스토어 앱 Android 개발자 인증 등록(아래).
 - D-U-N-S: 2026-10-29 발급(9자리). D-U-N-S는 항상 숫자 9자리이고, 접수 메일의 요청 키·케이스 번호는 D-U-N-S가 아닙니다. Play Console의 조직 이름·주소는 결제 프로필에서 가져오며 D&B 등록 정보와 같아야 합니다.
 - Play Console 계정(2026-10-29~30): 결제 프로필이 **없던** 예전 일반 Google 계정으로 **조직** 유형 가입(쿠팡 파트너스용 옛 계정은 결제 프로필이 "개인"이라 제외, 브랜드 계정은 가입 불가). 개발자 이름 `onenewmanshop`(스토어에 공개, 계정 세부정보에서 바꿀 수 있음), 조직 유형 "회사 또는 비즈니스", 규모 1~10. 직전 6개월 안에 다른 계정으로 Play Console에 가입했다가 심사 중 삭제한 일이 있어 "다른 Google 계정 사용" 질문에 "예"로 답함. 휴대폰 번호는 `+8210…`(앞 0 빼고, 띄어쓰기 없이) 형식.
 - 조직 연락 이메일은 사이트 도메인이어야 해서 Cloudflare **Email Routing**으로 `contact@cloverpick.app` → 사용자 Gmail 전달을 만들었습니다(MX 3개·DKIM·SPF TXT 추가, 전체 수신(catch-all)은 꺼 둠). 처음엔 Gmail 스팸함으로 들어와 Gmail 필터(받는사람 `contact@cloverpick.app` → 스팸으로 분류 안 함, 중요 표시)를 만들었습니다. 받기만 되고 보내기는 안 됩니다.
