@@ -2572,7 +2572,7 @@
         'qr.reading': '사진에서 QR을 찾는 중이에요…',
         'qr.loading': '당첨번호를 불러오는 중이에요…',
         'qr.paused': '화면을 벗어나서 카메라를 껐어요. 아래 버튼을 누르면 다시 스캔해요.',
-        'qr.errNotLotto': '로또 6/45 용지의 QR이 아니에요.',
+        'qr.errNotLotto': '로또 6/45·연금복권720+ 용지의 QR이 아니에요.',
         'qr.readText': '(읽은 내용: {text})',
         'qr.errPhoto': '사진에서 QR을 찾지 못했어요. QR이 잘 보이게 가까이 찍어 주세요.',
         'qr.errData': '당첨번호를 불러오지 못했어요. 인터넷 연결을 확인하고 다시 시도해 주세요.',
@@ -2642,6 +2642,8 @@
         'pension.rank': '{rank}등 당첨! {prize}',
         'pension.bonusWin': '보너스 당첨! {prize}',
         'pension.lose': '아쉽지만 당첨되지 않았어요',
+        'pension.pending': '{round}회는 아직 추첨 전이에요 (추첨일 {date} 목요일 저녁)',
+        'pension.noDraw': '{round}회 당첨번호가 없어요',
         'pension.note': '끝자리부터 맞은 숫자로 등수를 정해요. 정확한 결과와 당첨금 수령은 동행복권에서 확인하세요.',
         'pension.prize1': '월 700만원 × 20년',
         'pension.prize2': '월 100만원 × 10년',
@@ -2823,7 +2825,7 @@
         'qr.reading': 'Looking for the QR code in the photo…',
         'qr.loading': 'Loading winning numbers…',
         'qr.paused': 'The camera was turned off while you were away. Tap the button below to scan again.',
-        'qr.errNotLotto': 'This is not a Lotto 6/45 ticket QR code.',
+        'qr.errNotLotto': 'This is not a Lotto 6/45 or Pension Lottery 720+ ticket QR code.',
         'qr.readText': '(Read: {text})',
         'qr.errPhoto': 'No QR code found in the photo. Take a closer, clearer shot.',
         'qr.errData': 'Couldn\'t load the winning numbers. Check your connection and try again.',
@@ -2893,6 +2895,8 @@
         'pension.rank': 'Prize {rank} win! {prize}',
         'pension.bonusWin': 'Bonus win! {prize}',
         'pension.lose': 'Sorry, no win this time',
+        'pension.pending': 'Draw {round} has not happened yet (Thursday evening, {date})',
+        'pension.noDraw': 'No winning numbers for draw {round}',
         'pension.note': 'Prizes depend on how many digits match from the end. Check official results and claim prizes at Dhlottery.',
         'pension.prize1': 'KRW 7M a month for 20 years',
         'pension.prize2': 'KRW 1M a month for 10 years',
@@ -3074,7 +3078,7 @@
         'qr.reading': '正在照片中查找二维码…',
         'qr.loading': '正在加载中奖号码…',
         'qr.paused': '离开页面时已关闭相机。点击下方按钮即可重新扫描。',
-        'qr.errNotLotto': '这不是乐透 6/45 彩票的二维码。',
+        'qr.errNotLotto': '这不是乐透 6/45 或年金彩票720+的二维码。',
         'qr.readText': '（读取内容：{text}）',
         'qr.errPhoto': '未能在照片中找到二维码。请靠近一些拍清楚。',
         'qr.errData': '无法加载中奖号码。请检查网络后重试。',
@@ -3144,6 +3148,8 @@
         'pension.rank': '{rank}等奖！{prize}',
         'pension.bonusWin': '奖励奖！{prize}',
         'pension.lose': '很遗憾，未中奖',
+        'pension.pending': '第{round}期尚未开奖（{date} 周四晚上开奖）',
+        'pension.noDraw': '没有第{round}期的中奖号码',
         'pension.note': '按从末位开始相同的位数决定奖级。准确结果及领奖请以东幸彩票官网为准。',
         'pension.prize1': '每月700万韩元 × 20年',
         'pension.prize2': '每月100万韩元 × 10年',
@@ -3325,7 +3331,7 @@
         'qr.reading': '写真からQRコードを探しています…',
         'qr.loading': '当選番号を読み込んでいます…',
         'qr.paused': '画面を離れたためカメラを停止しました。下のボタンで再スキャンできます。',
-        'qr.errNotLotto': 'ロト6/45の用紙のQRコードではありません。',
+        'qr.errNotLotto': 'ロト6/45・年金宝くじ720+の用紙のQRコードではありません。',
         'qr.readText': '（読み取った内容：{text}）',
         'qr.errPhoto': '写真からQRコードが見つかりませんでした。近づいてはっきり撮影してください。',
         'qr.errData': '当選番号を読み込めませんでした。接続を確認してもう一度お試しください。',
@@ -3395,6 +3401,8 @@
         'pension.rank': '{rank}等当選！{prize}',
         'pension.bonusWin': 'ボーナス当選！{prize}',
         'pension.lose': '残念ながら当選していません',
+        'pension.pending': '第{round}回はまだ抽選前です（抽選日 {date} 木曜の夜）',
+        'pension.noDraw': '第{round}回の当選番号がありません',
         'pension.note': '下の桁から一致した数で等級が決まります。正確な結果と当選金の受け取りは東行宝くじでご確認ください。',
         'pension.prize1': '月700万ウォン × 20年',
         'pension.prize2': '月100万ウォン × 10年',
@@ -5024,6 +5032,11 @@
         showQrTicket(ticket);
         return true;
       }
+      const pension = parsePensionQr(text);
+      if (pension) {
+        showPensionFromQr(pension);
+        return true;
+      }
       if (text !== qrLastText) {
         qrLastText = text;
         setQrState({ status: qrState.status, errorKey: 'qr.errNotLotto' });
@@ -5397,6 +5410,11 @@
           showQrTicket(ticket);
           return true;
         }
+        const pension = parsePensionQr(text);
+        if (pension) {
+          showPensionFromQr(pension);
+          return true;
+        }
         info.other = String(text).slice(0, 40);
         qrLastText = String(text);
         return false;
@@ -5600,25 +5618,75 @@
         opt.textContent = t('pension.round', { round: d[0], date: d[1] });
       });
 
+      // check = { round, games: [{ group, number }] } (직접 입력은 1개, QR 용지는 여러 개일 수 있음)
       const c = pensionState.check;
       if (!c) { pensionResult.innerHTML = ''; return; }
-      const draw = pensionDraws.get(c.round);
-      if (!draw) { pensionResult.innerHTML = ''; return; }
-      const { rank, bonus } = pensionRankOf(c.group, c.number, draw);
-      const hitDigits = rank === 0 ? 0 : (rank <= 2 ? 6 : 8 - rank);
       const groupLabel = n => t('pension.group', { n });
+      const draw = pensionDraws.get(c.round);
+      let html = '';
 
-      let html = `<div class="pension-line"><span class="label">${t('pension.win1', { round: draw[0], date: draw[1] })}</span>${pensionDigitsHtml(draw[3], 0, groupLabel(draw[2]), false)}</div>`;
+      if (!draw) {
+        // 아직 추첨 전(파일 최신 회차보다 큼): 매주 목요일이라 최신 추첨일 + 7일 × 차이
+        const base = new Date(latest[1] + 'T00:00:00');
+        base.setDate(base.getDate() + 7 * (c.round - latest[0]));
+        const date = `${base.getFullYear()}-${String(base.getMonth() + 1).padStart(2, '0')}-${String(base.getDate()).padStart(2, '0')}`;
+        html += `<div class="pension-summary">⏳ ${c.round > latest[0] ? t('pension.pending', { round: c.round, date }) : t('pension.noDraw', { round: c.round })}</div>`;
+        c.games.forEach(g => {
+          html += `<div class="pension-line"><span class="label">${t('pension.mine')}</span>${pensionDigitsHtml(g.number, 0, groupLabel(g.group), false)}</div>`;
+        });
+        pensionResult.innerHTML = html;
+        return;
+      }
+
+      html += `<div class="pension-line"><span class="label">${t('pension.win1', { round: draw[0], date: draw[1] })}</span>${pensionDigitsHtml(draw[3], 0, groupLabel(draw[2]), false)}</div>`;
       html += `<div class="pension-line"><span class="label">${t('pension.bonusLabel')}</span>${pensionDigitsHtml(draw[4], 0)}</div>`;
-      html += `<div class="pension-line"><span class="label">${t('pension.mine')}</span>${pensionDigitsHtml(c.number, hitDigits, groupLabel(c.group), rank === 1)}</div>`;
-      const wins = [];
-      if (rank) wins.push(t('pension.rank', { rank, prize: t(`pension.prize${rank}`) }));
-      if (bonus) wins.push(t('pension.bonusWin', { prize: t('pension.prizeBonus') }));
-      html += wins.length
-        ? `<div class="pension-summary win">🎉 ${wins.join(' · ')}</div>`
-        : `<div class="pension-summary">${t('pension.lose')}</div>`;
+      c.games.forEach(g => {
+        const { rank, bonus } = pensionRankOf(g.group, g.number, draw);
+        const hitDigits = rank === 0 ? 0 : (rank <= 2 ? 6 : 8 - rank);
+        html += `<div class="pension-line"><span class="label">${t('pension.mine')}</span>${pensionDigitsHtml(g.number, hitDigits, groupLabel(g.group), rank === 1)}</div>`;
+        const wins = [];
+        if (rank) wins.push(t('pension.rank', { rank, prize: t(`pension.prize${rank}`) }));
+        if (bonus) wins.push(t('pension.bonusWin', { prize: t('pension.prizeBonus') }));
+        html += wins.length
+          ? `<div class="pension-summary win">🎉 ${wins.join(' · ')}</div>`
+          : `<div class="pension-summary">${t('pension.lose')}</div>`;
+      });
       html += `<p class="pension-note">${t('pension.note')}</p>`;
       pensionResult.innerHTML = html;
+    }
+
+    // 연금복권 용지 QR: http://qr.dhlottery.co.kr/?v=pd12 + 회차 4자리 + (조 1자리 + 영문 1자리 + 번호 6자리)…
+    // 실제 용지(342회 1조 077117, 1장)로 확인: ?v=pd1203421s077117. 'pd12'의 12와 영문(s)의 뜻은 아직 모름.
+    // 여러 장을 한 번에 산 용지도 같은 묶음이 이어진다고 보고 반복으로 읽는다(미확인).
+    function parsePensionQr(text) {
+      const m = /[?&]v=pd\d*?(\d{4})((?:[1-5][a-z]\d{6})+)/i.exec(String(text || ''));
+      if (!m) return null;
+      const games = m[2].match(/[1-5][a-z]\d{6}/gi).map(s => ({ group: Number(s[0]), number: s.slice(2) }));
+      return { round: Number(m[1]), games };
+    }
+
+    // QR 창에서 연금복권 용지를 읽으면 창을 닫고 로또 탭의 연금복권 칸에 결과를 보여 준다
+    async function showPensionFromQr(ticket) {
+      closeQrModal();
+      playPopSound(880);
+      pensionBox.open = true;
+      pensionState = { ...pensionState, status: 'loading' };
+      renderPension();
+      try {
+        await loadPensionDraws();
+      } catch (e) {
+        pensionState = { ...pensionState, status: 'error' };
+        renderPension();
+        return;
+      }
+      pensionState = { status: 'ready', check: ticket };
+      renderPension();
+      if (pensionDraws.has(ticket.round)) pensionRound.value = String(ticket.round);
+      pensionGroup.value = String(ticket.games[0].group);
+      pensionNumber.value = ticket.games[0].number;
+      pensionBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const draw = pensionDraws.get(ticket.round);
+      if (draw && ticket.games.some(g => { const r = pensionRankOf(g.group, g.number, draw); return r.rank || r.bonus; })) triggerConfetti();
     }
 
     pensionBox.addEventListener('toggle', () => {
@@ -5644,7 +5712,7 @@
         pensionNumber.focus();
         return;
       }
-      pensionState = { ...pensionState, check: { round: Number(pensionRound.value), group: Number(pensionGroup.value), number } };
+      pensionState = { ...pensionState, check: { round: Number(pensionRound.value), games: [{ group: Number(pensionGroup.value), number }] } };
       renderPension();
       playPopSound(600);
     });
