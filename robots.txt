@@ -2,3 +2,5 @@ User-agent: *
 Allow: /
 
 Sitemap: https://cloverpick.app/sitemap.xml
+
+#DaumWebMasterTool:f467dacabb030c4f967b92d208352ce19b7dc792e26add1fbbd56d5fd1c62e85:upewRfgI5y6IkdBZlCoHBQ==
