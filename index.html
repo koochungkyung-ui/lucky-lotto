@@ -2166,11 +2166,11 @@
         <div class="birth-input-row">
           <!-- 날짜 표시 및 달력 열기 버튼 -->
           <div class="calendar-trigger-btn" id="cal-trigger" tabindex="0" role="button" aria-haspopup="dialog" aria-expanded="false">
-            <span id="cal-display-text">📅 1996년 01월 01일</span>
+            <span id="cal-display-text">📅 생년월일을 선택하세요</span>
             <span class="cal-dropdown-arrow">▼</span>
           </div>
           <!-- 실제 로직과 연동되는 hidden input -->
-          <input type="hidden" id="birth-date" value="1996-01-01">
+          <input type="hidden" id="birth-date" value="">
 
           <button class="btn-main btn-fortune" id="btn-fortune">
             <span>✨</span> <span data-i18n="fortune.button">맞춤 운세 & 로또 번호 뽑기</span>
@@ -2500,6 +2500,8 @@
         'fortune.placeholder': '생년월일을 선택하고 버튼을 누르면 오늘의 맞춤 운세와 연계 번호를 확인하실 수 있습니다!',
         'fortune.toastInvalid': '⚠️ 생년월일을 올바르게 선택해주세요!',
         'fortune.toastFormat': '⚠️ 생년월일 형식이 올바르지 않습니다.',
+        'fortune.pickBirth': '생년월일을 선택하세요',
+        'fortune.toastPick': '🎂 생년월일을 먼저 선택해 주세요!',
         'fortune.tag': '{year}년생 {zodiac} · {cIcon} {cName} · {element}의 기운',
         'fortune.score': '(행운 지수: {score}점)',
         'fortune.headline': '"오늘 당신의 운명과 숫자가 맞닿는 날!"',
@@ -2722,6 +2724,8 @@
         'fortune.placeholder': "Pick your birthday and tap the button to see today's fortune and your linked numbers!",
         'fortune.toastInvalid': '⚠️ Please choose a valid birthday!',
         'fortune.toastFormat': '⚠️ The birthday format is not valid.',
+        'fortune.pickBirth': 'Choose your birthday',
+        'fortune.toastPick': '🎂 Please choose your birthday first!',
         'fortune.tag': 'Born {year} · Year of the {zodiac} · {cIcon} {cName} · {element} energy',
         'fortune.score': '(Luck score: {score})',
         'fortune.headline': '"Today your destiny meets your numbers!"',
@@ -2944,6 +2948,8 @@
         'fortune.placeholder': '选择生日并点击按钮，即可查看今日专属运势和关联号码！',
         'fortune.toastInvalid': '⚠️ 请正确选择生日！',
         'fortune.toastFormat': '⚠️ 生日格式不正确。',
+        'fortune.pickBirth': '请选择生日',
+        'fortune.toastPick': '🎂 请先选择生日！',
         'fortune.tag': '{year}年生 · 属{zodiac} · {cIcon} {cName} · {element}之气',
         'fortune.score': '(幸运指数: {score}分)',
         'fortune.headline': '"今天是你的命运与数字相遇的日子！"',
@@ -3166,6 +3172,8 @@
         'fortune.placeholder': '生年月日を選んでボタンを押すと、今日の運勢と連動番号が表示されます！',
         'fortune.toastInvalid': '⚠️ 生年月日を正しく選択してください！',
         'fortune.toastFormat': '⚠️ 生年月日の形式が正しくありません。',
+        'fortune.pickBirth': '生年月日を選んでください',
+        'fortune.toastPick': '🎂 先に生年月日を選んでください！',
         'fortune.tag': '{year}年生まれ · {zodiac} · {cIcon} {cName} · {element}の気',
         'fortune.score': '(ラッキー指数: {score}点)',
         'fortune.headline': '"今日はあなたの運命と数字が出会う日！"',
@@ -3653,10 +3661,27 @@
     const fortuneContent = document.getElementById('fortune-content');
     const fortuneCrystal = document.getElementById('fortune-crystal');
 
-    // 달력 날짜 상태
-    let selectedYear = 1996;
+    // 달력 날짜 상태 (처음엔 선택 안 함, 고른 생년월일은 이 기기 localStorage 'birth-date'에 기억)
+    let hasBirth = false;
+    let selectedYear = 1990; // 선택 전에는 달력을 1990년 1월로 열기
     let selectedMonth = 0; // 0: 1월
     let selectedDay = 1;
+    try {
+      const savedBirth = localStorage.getItem('birth-date');
+      const mm = /^(\d{4})-(\d{2})-(\d{2})$/.exec(savedBirth || '');
+      if (mm) {
+        const sy = +mm[1], sm = +mm[2] - 1, sd = +mm[3];
+        const dt = new Date(sy, sm, sd);
+        if (sy >= 1930 && sy <= new Date().getFullYear() && dt.getMonth() === sm && dt.getDate() === sd) {
+          selectedYear = sy; selectedMonth = sm; selectedDay = sd; hasBirth = true;
+        }
+      }
+    } catch (e) {}
+
+    function rememberBirth() {
+      hasBirth = true;
+      try { localStorage.setItem('birth-date', birthDateInput.value); } catch (e) {}
+    }
 
     let viewYear = selectedYear;
     let viewMonth = selectedMonth;
@@ -3719,7 +3744,7 @@
         dayBtn.className = 'calendar-day-cell';
         dayBtn.textContent = day;
 
-        const isSelected = (selectedYear === viewYear && selectedMonth === viewMonth && selectedDay === day);
+        const isSelected = hasBirth && (selectedYear === viewYear && selectedMonth === viewMonth && selectedDay === day);
         if (isSelected) dayBtn.classList.add('selected');
 
         if (isCurrentMonthToday && today.getDate() === day) {
@@ -3731,7 +3756,9 @@
           selectedYear = viewYear;
           selectedMonth = viewMonth;
           selectedDay = day;
+          hasBirth = true;
           updateDateDisplay();
+          rememberBirth();
           renderCalendarDays();
           closeCalendar();
           playPopSound(580);
@@ -3742,6 +3769,11 @@
     }
 
     function updateDateDisplay() {
+      if (!hasBirth) {
+        birthDateInput.value = '';
+        calDisplayText.textContent = `📅 ${t('fortune.pickBirth')}`;
+        return;
+      }
       const padM = String(selectedMonth + 1).padStart(2, '0');
       const padD = String(selectedDay).padStart(2, '0');
       birthDateInput.value = `${selectedYear}-${padM}-${padD}`;
@@ -3820,7 +3852,9 @@
       selectedDay = now.getDate();
       viewYear = selectedYear;
       viewMonth = selectedMonth;
+      hasBirth = true;
       updateDateDisplay();
+      rememberBirth();
       renderCalendarDays();
       closeCalendar();
     });
@@ -3904,7 +3938,8 @@
     btnFortune.addEventListener('click', () => {
       const val = birthDateInput.value;
       if (!val) {
-        showToast(t('fortune.toastInvalid'));
+        showToast(t('fortune.toastPick'));
+        openCalendar();
         return;
       }
 
