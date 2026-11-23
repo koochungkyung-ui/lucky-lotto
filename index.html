@@ -1260,61 +1260,7 @@
       margin-top: 12px;
     }
 
-    /* 연금복권720+ 번호 확인 */
-    .pension-box {
-      width: 100%;
-      margin-top: 6px;
-      border: 1px solid var(--sub-border);
-      border-radius: var(--radius-sm);
-      background: var(--sub-bg);
-    }
-    .pension-box summary {
-      padding: 10px 12px;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-main);
-      cursor: pointer;
-      text-align: center;
-      list-style-position: inside;
-    }
-    .pension-body {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding: 0 12px 12px;
-    }
-    .pension-latest {
-      margin: 0;
-      font-size: 12.5px;
-      color: var(--text-muted);
-      text-align: center;
-      line-height: 1.5;
-    }
-    .pension-form {
-      display: flex;
-      gap: 6px;
-    }
-    .pension-form select,
-    .pension-form input {
-      min-width: 0;
-      height: 40px;
-      padding: 0 8px;
-      border: 1px solid var(--sub-border);
-      border-radius: var(--radius-sm);
-      background: var(--card-bg);
-      color: var(--text-main);
-      font-size: 15px;
-      font-family: inherit;
-    }
-    .pension-form { flex-wrap: wrap; }
-    .pension-form #pension-round { flex: 1 1 100%; } /* 회차(날짜 포함)는 한 줄 전체, 조·번호는 다음 줄 */
-    .pension-form #pension-group { flex: 1 1 0; }
-    .pension-form #pension-number { flex: 1.6 1 0; letter-spacing: 1px; }
-    .pension-check-btn {
-      flex: none;
-      width: 100%;
-    }
-    .pension-result:empty { display: none; }
+    /* 연금복권720+ 결과 (QR 창 안) */
     .pension-result {
       display: flex;
       flex-direction: column;
@@ -2231,27 +2177,12 @@
              기본 버튼은 사이트 안 실시간 카메라, 아래 보조 버튼은 폰 기본 카메라 앱으로 찍어서 확인 -->
         <div class="qr-check-wrap" id="qr-check-wrap">
           <button type="button" class="btn-sub qr-check-btn" id="btn-qr-live">
-            <span>📷</span> <span data-i18n="qr.open">QR로 당첨 확인</span>
+            <span>📷</span> <span data-i18n="qr.open">QR로 로또·연금복권 당첨 확인</span>
           </button>
           <label class="qr-alt-btn" id="btn-qr-check">
             <span data-i18n="qr.capture">카메라 앱으로 찍어서 확인</span>
             <input type="file" accept="image/*" capture="environment" class="qr-file-input" id="qr-capture-main">
           </label>
-
-          <!-- 연금복권720+ 번호로 당첨 확인 (data/pension720.json, 스크립트 6-3) -->
-          <details class="pension-box" id="pension-box">
-            <summary><span>🎟️</span> <span data-i18n="pension.open">연금복권720+ 번호로 당첨 확인</span></summary>
-            <div class="pension-body">
-              <p class="pension-latest" id="pension-latest"></p>
-              <div class="pension-form">
-                <select id="pension-round" aria-label="회차" data-i18n-aria="pension.roundAria"></select>
-                <select id="pension-group" aria-label="조" data-i18n-aria="pension.groupAria"></select>
-                <input id="pension-number" type="text" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="6자리 번호" data-i18n-placeholder="pension.numberPh">
-              </div>
-              <button type="button" class="btn-sub pension-check-btn" id="btn-pension-check"><span>🔍</span> <span data-i18n="pension.check">당첨 확인</span></button>
-              <div class="pension-result" id="pension-result" aria-live="polite"></div>
-            </div>
-          </details>
         </div>
 
         <a class="btn-sub lottery-link" id="lottery-link" href="https://www.dhlottery.co.kr/" target="_blank" rel="noopener noreferrer">
@@ -2554,7 +2485,7 @@
         'link.tarot': '타로 카드 22장의 의미',
         'link.onestore': '원스토어에서 앱 받기',
 
-        'qr.open': 'QR로 당첨 확인',
+        'qr.open': 'QR로 로또·연금복권 당첨 확인',
         'qr.title': 'QR로 당첨 확인',
         'qr.close': '닫기',
         'qr.rescan': '카메라로 스캔',
@@ -2625,17 +2556,7 @@
         'fortune.toastFormat': '⚠️ 생년월일 형식이 올바르지 않습니다.',
         'fortune.pickBirth': '생년월일을 선택하세요',
         'fortune.toastPick': '🎂 생년월일을 먼저 선택해 주세요!',
-        'pension.open': '연금복권720+ 번호로 당첨 확인',
-        'pension.loading': '연금복권 당첨번호를 불러오는 중…',
-        'pension.loadError': '⚠️ 당첨번호를 불러오지 못했어요. 인터넷 연결을 확인해 주세요.',
-        'pension.latest': '최신 {round}회 ({date}) · 1등 {group}조 {number} · 보너스 각조 {bonus}',
-        'pension.round': '{round}회 ({date})',
         'pension.group': '{n}조',
-        'pension.roundAria': '회차',
-        'pension.groupAria': '조',
-        'pension.numberPh': '6자리 번호',
-        'pension.check': '당첨 확인',
-        'pension.needNumber': '⚠️ 용지의 6자리 번호를 입력해 주세요',
         'pension.win1': '{round}회 ({date}) 1등 번호',
         'pension.bonusLabel': '보너스 번호 (각조)',
         'pension.mine': '내 번호',
@@ -2807,7 +2728,7 @@
         'link.tarot': 'Meanings of the 22 tarot cards',
         'link.onestore': 'Get the app on ONE store',
 
-        'qr.open': 'Check ticket by QR',
+        'qr.open': 'Check Lotto · Pension tickets by QR',
         'qr.title': 'Check ticket by QR',
         'qr.close': 'Close',
         'qr.rescan': 'Scan with camera',
@@ -2878,17 +2799,7 @@
         'fortune.toastFormat': '⚠️ The birthday format is not valid.',
         'fortune.pickBirth': 'Choose your birthday',
         'fortune.toastPick': '🎂 Please choose your birthday first!',
-        'pension.open': 'Check Pension Lottery 720+ numbers',
-        'pension.loading': 'Loading Pension Lottery results…',
-        'pension.loadError': '⚠️ Could not load the winning numbers. Please check your connection.',
-        'pension.latest': 'Latest: draw {round} ({date}) · 1st: group {group} {number} · Bonus (all groups) {bonus}',
-        'pension.round': 'Draw {round} ({date})',
         'pension.group': 'Group {n}',
-        'pension.roundAria': 'Draw',
-        'pension.groupAria': 'Group',
-        'pension.numberPh': '6-digit number',
-        'pension.check': 'Check',
-        'pension.needNumber': '⚠️ Please enter the 6-digit number on your ticket',
         'pension.win1': 'Draw {round} ({date}) 1st prize number',
         'pension.bonusLabel': 'Bonus number (all groups)',
         'pension.mine': 'My number',
@@ -3060,7 +2971,7 @@
         'link.tarot': '22 张塔罗牌的含义',
         'link.onestore': '在 ONE store 下载应用',
 
-        'qr.open': '扫码查询中奖',
+        'qr.open': '扫码查询乐透·年金彩票中奖',
         'qr.title': '扫码查询中奖',
         'qr.close': '关闭',
         'qr.rescan': '用相机扫描',
@@ -3131,17 +3042,7 @@
         'fortune.toastFormat': '⚠️ 生日格式不正确。',
         'fortune.pickBirth': '请选择生日',
         'fortune.toastPick': '🎂 请先选择生日！',
-        'pension.open': '用号码查询年金彩票720+中奖',
-        'pension.loading': '正在加载年金彩票中奖号码…',
-        'pension.loadError': '⚠️ 无法加载中奖号码，请检查网络连接。',
-        'pension.latest': '最新第{round}期 ({date}) · 一等奖 {group}组 {number} · 奖励号(各组) {bonus}',
-        'pension.round': '第{round}期 ({date})',
         'pension.group': '{n}组',
-        'pension.roundAria': '期数',
-        'pension.groupAria': '组',
-        'pension.numberPh': '6位号码',
-        'pension.check': '查询中奖',
-        'pension.needNumber': '⚠️ 请输入彩票上的6位号码',
         'pension.win1': '第{round}期 ({date}) 一等奖号码',
         'pension.bonusLabel': '奖励号码（各组）',
         'pension.mine': '我的号码',
@@ -3313,7 +3214,7 @@
         'link.tarot': 'タロットカード 22 枚の意味',
         'link.onestore': 'ONE store でアプリを入手',
 
-        'qr.open': 'QRで当選確認',
+        'qr.open': 'QRでロト・年金宝くじの当選確認',
         'qr.title': 'QRで当選確認',
         'qr.close': '閉じる',
         'qr.rescan': 'カメラでスキャン',
@@ -3384,17 +3285,7 @@
         'fortune.toastFormat': '⚠️ 生年月日の形式が正しくありません。',
         'fortune.pickBirth': '生年月日を選んでください',
         'fortune.toastPick': '🎂 先に生年月日を選んでください！',
-        'pension.open': '年金宝くじ720+を番号で当選確認',
-        'pension.loading': '年金宝くじの当選番号を読み込み中…',
-        'pension.loadError': '⚠️ 当選番号を読み込めませんでした。インターネット接続を確認してください。',
-        'pension.latest': '最新 第{round}回 ({date}) · 1等 {group}組 {number} · ボーナス(各組) {bonus}',
-        'pension.round': '第{round}回 ({date})',
         'pension.group': '{n}組',
-        'pension.roundAria': '回',
-        'pension.groupAria': '組',
-        'pension.numberPh': '6桁の番号',
-        'pension.check': '当選確認',
-        'pension.needNumber': '⚠️ 用紙の6桁の番号を入力してください',
         'pension.win1': '第{round}回 ({date}) 1等番号',
         'pension.bonusLabel': 'ボーナス番号（各組）',
         'pension.mine': 'あなたの番号',
@@ -4949,6 +4840,10 @@
           <p class="qr-note qr-diag">${qrState.photo.info.replace(/[<>&]/g, '')}</p>`;
         return;
       }
+      if (s === 'result' && qrState.pension) {
+        qrResult.innerHTML = pensionResultHtml(qrState.pension); // 연금복권 용지 (스크립트 6-3)
+        return;
+      }
       if (s !== 'result' || !qrState.ticket) {
         qrResult.innerHTML = '';
         return;
@@ -5014,14 +4909,14 @@
     async function showQrTicket(ticket) {
       stopQrCamera();
       playPopSound(880);
-      setQrState({ status: 'loading', ticket });
+      setQrState({ status: 'loading', ticket, pension: null });
       try {
         await loadLottoDraws();
       } catch (e) {
         setQrState({ status: 'error', errorKey: 'qr.errData' });
         return;
       }
-      setQrState({ status: 'result', ticket });
+      setQrState({ status: 'result', ticket, pension: null });
       const draw = qrDraws.get(ticket.round);
       if (draw && ticket.games.some(g => qrRankOf(g.numbers, draw))) triggerConfetti();
     }
@@ -5316,7 +5211,7 @@
     async function startQrCamera(deviceId) {
       stopQrCamera();
       qrLastText = '';
-      setQrState({ status: 'starting', ticket: null, photo: null, nudge: false });
+      setQrState({ status: 'starting', ticket: null, pension: null, photo: null, nudge: false });
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         setQrState({ status: 'nocamera' });
         return;
@@ -5387,7 +5282,7 @@
     // 사진을 겹치게 나눈 조각을 키워 가며 다시 읽는다 (QR이 작게 찍힌 사진 대비)
     async function readQrFromPhoto(file) {
       stopQrCamera();
-      setQrState({ status: 'reading', ticket: null, photo: null });
+      setQrState({ status: 'reading', ticket: null, pension: null, photo: null });
       const info = {
         dims: '', size: `${Math.round(file.size / 1024)}KB`, type: file.type || 'unknown type',
         tries: 0, engine: qrDetector ? 'native+jsQR' : 'jsQR', other: '', error: ''
@@ -5523,7 +5418,7 @@
     // 카메라 앱을 열기 전에 스캔 카메라를 끈다 (카메라를 서로 잡으려 하거나 메모리가 모자라 사이트가 새로 고쳐지는 것을 줄임)
     qrCaptureInput.addEventListener('click', () => {
       stopQrCamera();
-      setQrState({ status: 'capturing', ticket: null, photo: null });
+      setQrState({ status: 'capturing', ticket: null, pension: null, photo: null });
     });
     // 다른 앱으로 넘어가면 카메라를 끈다
     document.addEventListener('visibilitychange', () => {
@@ -5547,20 +5442,14 @@
     }
 
     /* ========================================================
-       6-3. 연금복권720+ 번호로 당첨 확인
+       6-3. 연금복권720+ 당첨 확인 (QR 창에서 읽은 용지 결과)
        ======================================================== */
     // 당첨번호는 data/pension720.json([회차, 날짜, 1등 조, 1등 6자리, 보너스 6자리]).
     // 등수: 1등 조+6자리, 2등 6자리(조 다름), 3~7등 끝에서 5·4·3·2·1자리, 보너스 6자리(각 조, 등수와 따로).
     // 당첨금은 회차마다 같아서 I18N 'pension.prize1~7', 'pension.prizeBonus'에 둔다.
-    const pensionBox = document.getElementById('pension-box');
-    const pensionLatest = document.getElementById('pension-latest');
-    const pensionRound = document.getElementById('pension-round');
-    const pensionGroup = document.getElementById('pension-group');
-    const pensionNumber = document.getElementById('pension-number');
-    const pensionResult = document.getElementById('pension-result');
+    // 결과는 로또처럼 QR 창(qrResult)에 그린다: qrState.pension → renderQr() → pensionResultHtml()
     let pensionDraws = null; // Map 회차 → 행
     let pensionPromise = null;
-    let pensionState = { status: 'idle', check: null };
 
     function loadPensionDraws() {
       if (pensionDraws) return Promise.resolve(pensionDraws);
@@ -5591,56 +5480,29 @@
       return (groupText ? `<span class="pension-digit group${groupHit ? ' hit' : ''}">${groupText}</span>` : '') + digits;
     }
 
-    function renderPension() {
-      const s = pensionState.status;
-      // 조 목록은 언어에 따라 글자가 바뀐다
-      const curGroup = pensionGroup.value || '1';
-      pensionGroup.innerHTML = [1, 2, 3, 4, 5].map(n => `<option value="${n}">${t('pension.group', { n })}</option>`).join('');
-      pensionGroup.value = curGroup;
-
-      if (s === 'loading' || s === 'idle') {
-        pensionLatest.textContent = s === 'loading' ? t('pension.loading') : '';
-        return;
-      }
-      if (s === 'error') {
-        pensionLatest.textContent = t('pension.loadError');
-        return;
-      }
-
+    // ticket = { round, games: [{ group, number }] }
+    function pensionResultHtml(ticket) {
+      if (!pensionDraws) return '';
       const latest = pensionDraws.get(Math.max(...pensionDraws.keys()));
-      pensionLatest.textContent = t('pension.latest', { round: latest[0], date: latest[1], group: latest[2], number: latest[3], bonus: latest[4] });
-      if (!pensionRound.options.length) {
-        const rounds = [...pensionDraws.keys()].sort((a, b) => b - a);
-        pensionRound.innerHTML = rounds.map(r => `<option value="${r}"></option>`).join('');
-      }
-      [...pensionRound.options].forEach(opt => {
-        const d = pensionDraws.get(Number(opt.value));
-        opt.textContent = t('pension.round', { round: d[0], date: d[1] });
-      });
-
-      // check = { round, games: [{ group, number }] } (직접 입력은 1개, QR 용지는 여러 개일 수 있음)
-      const c = pensionState.check;
-      if (!c) { pensionResult.innerHTML = ''; return; }
       const groupLabel = n => t('pension.group', { n });
-      const draw = pensionDraws.get(c.round);
-      let html = '';
+      const draw = pensionDraws.get(ticket.round);
+      let html = '<div class="pension-result">';
 
       if (!draw) {
         // 아직 추첨 전(파일 최신 회차보다 큼): 매주 목요일이라 최신 추첨일 + 7일 × 차이
         const base = new Date(latest[1] + 'T00:00:00');
-        base.setDate(base.getDate() + 7 * (c.round - latest[0]));
+        base.setDate(base.getDate() + 7 * (ticket.round - latest[0]));
         const date = `${base.getFullYear()}-${String(base.getMonth() + 1).padStart(2, '0')}-${String(base.getDate()).padStart(2, '0')}`;
-        html += `<div class="pension-summary">⏳ ${c.round > latest[0] ? t('pension.pending', { round: c.round, date }) : t('pension.noDraw', { round: c.round })}</div>`;
-        c.games.forEach(g => {
+        html += `<div class="pension-summary">⏳ ${ticket.round > latest[0] ? t('pension.pending', { round: ticket.round, date }) : t('pension.noDraw', { round: ticket.round })}</div>`;
+        ticket.games.forEach(g => {
           html += `<div class="pension-line"><span class="label">${t('pension.mine')}</span>${pensionDigitsHtml(g.number, 0, groupLabel(g.group), false)}</div>`;
         });
-        pensionResult.innerHTML = html;
-        return;
+        return html + '</div>';
       }
 
       html += `<div class="pension-line"><span class="label">${t('pension.win1', { round: draw[0], date: draw[1] })}</span>${pensionDigitsHtml(draw[3], 0, groupLabel(draw[2]), false)}</div>`;
       html += `<div class="pension-line"><span class="label">${t('pension.bonusLabel')}</span>${pensionDigitsHtml(draw[4], 0)}</div>`;
-      c.games.forEach(g => {
+      ticket.games.forEach(g => {
         const { rank, bonus } = pensionRankOf(g.group, g.number, draw);
         const hitDigits = rank === 0 ? 0 : (rank <= 2 ? 6 : 8 - rank);
         html += `<div class="pension-line"><span class="label">${t('pension.mine')}</span>${pensionDigitsHtml(g.number, hitDigits, groupLabel(g.group), rank === 1)}</div>`;
@@ -5652,7 +5514,7 @@
           : `<div class="pension-summary">${t('pension.lose')}</div>`;
       });
       html += `<p class="pension-note">${t('pension.note')}</p>`;
-      pensionResult.innerHTML = html;
+      return html + '</div>';
     }
 
     // 연금복권 용지 QR: http://qr.dhlottery.co.kr/?v=pd12 + 회차 4자리 + (조 1자리 + 영문 1자리 + 번호 6자리)…
@@ -5665,60 +5527,20 @@
       return { round: Number(m[1]), games };
     }
 
-    // QR 창에서 연금복권 용지를 읽으면 창을 닫고 로또 탭의 연금복권 칸에 결과를 보여 준다
     async function showPensionFromQr(ticket) {
-      closeQrModal();
+      stopQrCamera();
       playPopSound(880);
-      pensionBox.open = true;
-      pensionState = { ...pensionState, status: 'loading' };
-      renderPension();
+      setQrState({ status: 'loading', ticket: null, pension: ticket });
       try {
         await loadPensionDraws();
       } catch (e) {
-        pensionState = { ...pensionState, status: 'error' };
-        renderPension();
+        setQrState({ status: 'error', errorKey: 'qr.errData', pension: null });
         return;
       }
-      pensionState = { status: 'ready', check: ticket };
-      renderPension();
-      if (pensionDraws.has(ticket.round)) pensionRound.value = String(ticket.round);
-      pensionGroup.value = String(ticket.games[0].group);
-      pensionNumber.value = ticket.games[0].number;
-      pensionBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setQrState({ status: 'result', ticket: null, pension: ticket });
       const draw = pensionDraws.get(ticket.round);
       if (draw && ticket.games.some(g => { const r = pensionRankOf(g.group, g.number, draw); return r.rank || r.bonus; })) triggerConfetti();
     }
-
-    pensionBox.addEventListener('toggle', () => {
-      if (!pensionBox.open || pensionDraws) return;
-      pensionState = { ...pensionState, status: 'loading' };
-      renderPension();
-      loadPensionDraws()
-        .then(() => { pensionState = { ...pensionState, status: 'ready' }; renderPension(); })
-        .catch(() => { pensionState = { ...pensionState, status: 'error' }; renderPension(); });
-    });
-
-    pensionNumber.addEventListener('input', () => {
-      const v = pensionNumber.value.replace(/\D/g, '').slice(0, 6);
-      if (v !== pensionNumber.value) pensionNumber.value = v;
-    });
-    pensionNumber.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btn-pension-check').click(); });
-
-    document.getElementById('btn-pension-check').addEventListener('click', () => {
-      if (!pensionDraws) return;
-      const number = pensionNumber.value;
-      if (!/^\d{6}$/.test(number)) {
-        showToast(t('pension.needNumber'));
-        pensionNumber.focus();
-        return;
-      }
-      pensionState = { ...pensionState, check: { round: Number(pensionRound.value), games: [{ group: Number(pensionGroup.value), number }] } };
-      renderPension();
-      playPopSound(600);
-    });
-
-    renderPension();
-
     /* ========================================================
        8. 언어 적용
        ======================================================== */
@@ -5749,7 +5571,6 @@
       renderTarotResult();
       renderContactStatus();
       renderQr();
-      renderPension();
 
       try { localStorage.setItem('app-lang', currentLang); } catch (e) {}
     }
