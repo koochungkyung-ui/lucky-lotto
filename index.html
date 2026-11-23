@@ -1658,6 +1658,7 @@
       text-align: center;
       margin-top: 10px;
       min-height: 20px;
+      overflow-wrap: anywhere; /* 읽은 QR 주소처럼 띄어쓰기 없는 긴 글도 줄바꿈 */
     }
     .qr-hint.error {
       color: #dc2626;
@@ -2572,6 +2573,7 @@
         'qr.loading': '당첨번호를 불러오는 중이에요…',
         'qr.paused': '화면을 벗어나서 카메라를 껐어요. 아래 버튼을 누르면 다시 스캔해요.',
         'qr.errNotLotto': '로또 6/45 용지의 QR이 아니에요.',
+        'qr.readText': '(읽은 내용: {text})',
         'qr.errPhoto': '사진에서 QR을 찾지 못했어요. QR이 잘 보이게 가까이 찍어 주세요.',
         'qr.errData': '당첨번호를 불러오지 못했어요. 인터넷 연결을 확인하고 다시 시도해 주세요.',
         'qr.errLib': 'QR 인식 기능을 불러오지 못했어요. 인터넷 연결을 확인해 주세요.',
@@ -2822,6 +2824,7 @@
         'qr.loading': 'Loading winning numbers…',
         'qr.paused': 'The camera was turned off while you were away. Tap the button below to scan again.',
         'qr.errNotLotto': 'This is not a Lotto 6/45 ticket QR code.',
+        'qr.readText': '(Read: {text})',
         'qr.errPhoto': 'No QR code found in the photo. Take a closer, clearer shot.',
         'qr.errData': 'Couldn\'t load the winning numbers. Check your connection and try again.',
         'qr.errLib': 'Couldn\'t load the QR reader. Check your internet connection.',
@@ -3072,6 +3075,7 @@
         'qr.loading': '正在加载中奖号码…',
         'qr.paused': '离开页面时已关闭相机。点击下方按钮即可重新扫描。',
         'qr.errNotLotto': '这不是乐透 6/45 彩票的二维码。',
+        'qr.readText': '（读取内容：{text}）',
         'qr.errPhoto': '未能在照片中找到二维码。请靠近一些拍清楚。',
         'qr.errData': '无法加载中奖号码。请检查网络后重试。',
         'qr.errLib': '无法加载二维码识别功能。请检查网络连接。',
@@ -3322,6 +3326,7 @@
         'qr.loading': '当選番号を読み込んでいます…',
         'qr.paused': '画面を離れたためカメラを停止しました。下のボタンで再スキャンできます。',
         'qr.errNotLotto': 'ロト6/45の用紙のQRコードではありません。',
+        'qr.readText': '（読み取った内容：{text}）',
         'qr.errPhoto': '写真からQRコードが見つかりませんでした。近づいてはっきり撮影してください。',
         'qr.errData': '当選番号を読み込めませんでした。接続を確認してもう一度お試しください。',
         'qr.errLib': 'QRコード読み取り機能を読み込めませんでした。インターネット接続を確認してください。',
@@ -4920,7 +4925,9 @@
       const hintKey = qrState.errorKey || (nudge && 'qr.nudge') || {
         starting: 'qr.starting', scanning: 'qr.scanning', nocamera: 'qr.noCamera', reading: 'qr.reading', capturing: 'qr.capturing'
       }[s];
-      qrHint.textContent = hintKey ? t(hintKey) : '';
+      // 로또가 아닌 QR이면 읽은 내용을 함께 보여 준다(연금복권 등 다른 용지 형식 확인용)
+      const otherText = qrState.errorKey === 'qr.errNotLotto' && qrLastText ? ' ' + t('qr.readText', { text: String(qrLastText).slice(0, 120) }) : '';
+      qrHint.textContent = (hintKey ? t(hintKey) : '') + otherText;
       renderQrDebug();
       qrHint.classList.toggle('error', !!qrState.errorKey || s === 'nocamera');
 
@@ -5391,6 +5398,7 @@
           return true;
         }
         info.other = String(text).slice(0, 40);
+        qrLastText = String(text);
         return false;
       };
 
