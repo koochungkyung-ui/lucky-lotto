@@ -1260,6 +1260,112 @@
       margin-top: 12px;
     }
 
+    /* 연금복권720+ 번호 확인 */
+    .pension-box {
+      width: 100%;
+      margin-top: 6px;
+      border: 1px solid var(--sub-border);
+      border-radius: var(--radius-sm);
+      background: var(--sub-bg);
+    }
+    .pension-box summary {
+      padding: 10px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      text-align: center;
+      list-style-position: inside;
+    }
+    .pension-body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 0 12px 12px;
+    }
+    .pension-latest {
+      margin: 0;
+      font-size: 12.5px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.5;
+    }
+    .pension-form {
+      display: flex;
+      gap: 6px;
+    }
+    .pension-form select,
+    .pension-form input {
+      min-width: 0;
+      height: 40px;
+      padding: 0 8px;
+      border: 1px solid var(--sub-border);
+      border-radius: var(--radius-sm);
+      background: var(--card-bg);
+      color: var(--text-main);
+      font-size: 15px;
+      font-family: inherit;
+    }
+    .pension-form { flex-wrap: wrap; }
+    .pension-form #pension-round { flex: 1 1 100%; } /* 회차(날짜 포함)는 한 줄 전체, 조·번호는 다음 줄 */
+    .pension-form #pension-group { flex: 1 1 0; }
+    .pension-form #pension-number { flex: 1.6 1 0; letter-spacing: 1px; }
+    .pension-check-btn {
+      flex: none;
+      width: 100%;
+    }
+    .pension-result:empty { display: none; }
+    .pension-result {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 13.5px;
+    }
+    .pension-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .pension-line .label {
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .pension-digit {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      height: 32px;
+      padding: 0 4px;
+      border-radius: 8px;
+      border: 1px solid var(--sub-border);
+      background: var(--card-bg);
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .pension-digit.group { min-width: 40px; }
+    .pension-digit.hit {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+    .pension-summary {
+      text-align: center;
+      font-weight: 700;
+    }
+    .pension-summary.win { color: var(--primary); }
+    body.dark .pension-summary.win { color: #a5b4fc; }
+    .pension-note {
+      margin: 0;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
     /* QR 당첨 확인 창 */
     .qr-check-wrap {
       display: flex;
@@ -2130,6 +2236,21 @@
             <span data-i18n="qr.capture">카메라 앱으로 찍어서 확인</span>
             <input type="file" accept="image/*" capture="environment" class="qr-file-input" id="qr-capture-main">
           </label>
+
+          <!-- 연금복권720+ 번호로 당첨 확인 (data/pension720.json, 스크립트 6-3) -->
+          <details class="pension-box" id="pension-box">
+            <summary><span>🎟️</span> <span data-i18n="pension.open">연금복권720+ 번호로 당첨 확인</span></summary>
+            <div class="pension-body">
+              <p class="pension-latest" id="pension-latest"></p>
+              <div class="pension-form">
+                <select id="pension-round" aria-label="회차" data-i18n-aria="pension.roundAria"></select>
+                <select id="pension-group" aria-label="조" data-i18n-aria="pension.groupAria"></select>
+                <input id="pension-number" type="text" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="6자리 번호" data-i18n-placeholder="pension.numberPh">
+              </div>
+              <button type="button" class="btn-sub pension-check-btn" id="btn-pension-check"><span>🔍</span> <span data-i18n="pension.check">당첨 확인</span></button>
+              <div class="pension-result" id="pension-result" aria-live="polite"></div>
+            </div>
+          </details>
         </div>
 
         <a class="btn-sub lottery-link" id="lottery-link" href="https://www.dhlottery.co.kr/" target="_blank" rel="noopener noreferrer">
@@ -2502,6 +2623,32 @@
         'fortune.toastFormat': '⚠️ 생년월일 형식이 올바르지 않습니다.',
         'fortune.pickBirth': '생년월일을 선택하세요',
         'fortune.toastPick': '🎂 생년월일을 먼저 선택해 주세요!',
+        'pension.open': '연금복권720+ 번호로 당첨 확인',
+        'pension.loading': '연금복권 당첨번호를 불러오는 중…',
+        'pension.loadError': '⚠️ 당첨번호를 불러오지 못했어요. 인터넷 연결을 확인해 주세요.',
+        'pension.latest': '최신 {round}회 ({date}) · 1등 {group}조 {number} · 보너스 각조 {bonus}',
+        'pension.round': '{round}회 ({date})',
+        'pension.group': '{n}조',
+        'pension.roundAria': '회차',
+        'pension.groupAria': '조',
+        'pension.numberPh': '6자리 번호',
+        'pension.check': '당첨 확인',
+        'pension.needNumber': '⚠️ 용지의 6자리 번호를 입력해 주세요',
+        'pension.win1': '{round}회 ({date}) 1등 번호',
+        'pension.bonusLabel': '보너스 번호 (각조)',
+        'pension.mine': '내 번호',
+        'pension.rank': '{rank}등 당첨! {prize}',
+        'pension.bonusWin': '보너스 당첨! {prize}',
+        'pension.lose': '아쉽지만 당첨되지 않았어요',
+        'pension.note': '끝자리부터 맞은 숫자로 등수를 정해요. 정확한 결과와 당첨금 수령은 동행복권에서 확인하세요.',
+        'pension.prize1': '월 700만원 × 20년',
+        'pension.prize2': '월 100만원 × 10년',
+        'pension.prize3': '100만원',
+        'pension.prize4': '10만원',
+        'pension.prize5': '5만원',
+        'pension.prize6': '5천원',
+        'pension.prize7': '1천원',
+        'pension.prizeBonus': '월 100만원 × 10년',
         'fortune.tag': '{year}년생 {zodiac} · {cIcon} {cName} · {element}의 기운',
         'fortune.score': '(행운 지수: {score}점)',
         'fortune.headline': '"오늘 당신의 운명과 숫자가 맞닿는 날!"',
@@ -2726,6 +2873,32 @@
         'fortune.toastFormat': '⚠️ The birthday format is not valid.',
         'fortune.pickBirth': 'Choose your birthday',
         'fortune.toastPick': '🎂 Please choose your birthday first!',
+        'pension.open': 'Check Pension Lottery 720+ numbers',
+        'pension.loading': 'Loading Pension Lottery results…',
+        'pension.loadError': '⚠️ Could not load the winning numbers. Please check your connection.',
+        'pension.latest': 'Latest: draw {round} ({date}) · 1st: group {group} {number} · Bonus (all groups) {bonus}',
+        'pension.round': 'Draw {round} ({date})',
+        'pension.group': 'Group {n}',
+        'pension.roundAria': 'Draw',
+        'pension.groupAria': 'Group',
+        'pension.numberPh': '6-digit number',
+        'pension.check': 'Check',
+        'pension.needNumber': '⚠️ Please enter the 6-digit number on your ticket',
+        'pension.win1': 'Draw {round} ({date}) 1st prize number',
+        'pension.bonusLabel': 'Bonus number (all groups)',
+        'pension.mine': 'My number',
+        'pension.rank': 'Prize {rank} win! {prize}',
+        'pension.bonusWin': 'Bonus win! {prize}',
+        'pension.lose': 'Sorry, no win this time',
+        'pension.note': 'Prizes depend on how many digits match from the end. Check official results and claim prizes at Dhlottery.',
+        'pension.prize1': 'KRW 7M a month for 20 years',
+        'pension.prize2': 'KRW 1M a month for 10 years',
+        'pension.prize3': 'KRW 1,000,000',
+        'pension.prize4': 'KRW 100,000',
+        'pension.prize5': 'KRW 50,000',
+        'pension.prize6': 'KRW 5,000',
+        'pension.prize7': 'KRW 1,000',
+        'pension.prizeBonus': 'KRW 1M a month for 10 years',
         'fortune.tag': 'Born {year} · Year of the {zodiac} · {cIcon} {cName} · {element} energy',
         'fortune.score': '(Luck score: {score})',
         'fortune.headline': '"Today your destiny meets your numbers!"',
@@ -2950,6 +3123,32 @@
         'fortune.toastFormat': '⚠️ 生日格式不正确。',
         'fortune.pickBirth': '请选择生日',
         'fortune.toastPick': '🎂 请先选择生日！',
+        'pension.open': '用号码查询年金彩票720+中奖',
+        'pension.loading': '正在加载年金彩票中奖号码…',
+        'pension.loadError': '⚠️ 无法加载中奖号码，请检查网络连接。',
+        'pension.latest': '最新第{round}期 ({date}) · 一等奖 {group}组 {number} · 奖励号(各组) {bonus}',
+        'pension.round': '第{round}期 ({date})',
+        'pension.group': '{n}组',
+        'pension.roundAria': '期数',
+        'pension.groupAria': '组',
+        'pension.numberPh': '6位号码',
+        'pension.check': '查询中奖',
+        'pension.needNumber': '⚠️ 请输入彩票上的6位号码',
+        'pension.win1': '第{round}期 ({date}) 一等奖号码',
+        'pension.bonusLabel': '奖励号码（各组）',
+        'pension.mine': '我的号码',
+        'pension.rank': '{rank}等奖！{prize}',
+        'pension.bonusWin': '奖励奖！{prize}',
+        'pension.lose': '很遗憾，未中奖',
+        'pension.note': '按从末位开始相同的位数决定奖级。准确结果及领奖请以东幸彩票官网为准。',
+        'pension.prize1': '每月700万韩元 × 20年',
+        'pension.prize2': '每月100万韩元 × 10年',
+        'pension.prize3': '100万韩元',
+        'pension.prize4': '10万韩元',
+        'pension.prize5': '5万韩元',
+        'pension.prize6': '5千韩元',
+        'pension.prize7': '1千韩元',
+        'pension.prizeBonus': '每月100万韩元 × 10年',
         'fortune.tag': '{year}年生 · 属{zodiac} · {cIcon} {cName} · {element}之气',
         'fortune.score': '(幸运指数: {score}分)',
         'fortune.headline': '"今天是你的命运与数字相遇的日子！"',
@@ -3174,6 +3373,32 @@
         'fortune.toastFormat': '⚠️ 生年月日の形式が正しくありません。',
         'fortune.pickBirth': '生年月日を選んでください',
         'fortune.toastPick': '🎂 先に生年月日を選んでください！',
+        'pension.open': '年金宝くじ720+を番号で当選確認',
+        'pension.loading': '年金宝くじの当選番号を読み込み中…',
+        'pension.loadError': '⚠️ 当選番号を読み込めませんでした。インターネット接続を確認してください。',
+        'pension.latest': '最新 第{round}回 ({date}) · 1等 {group}組 {number} · ボーナス(各組) {bonus}',
+        'pension.round': '第{round}回 ({date})',
+        'pension.group': '{n}組',
+        'pension.roundAria': '回',
+        'pension.groupAria': '組',
+        'pension.numberPh': '6桁の番号',
+        'pension.check': '当選確認',
+        'pension.needNumber': '⚠️ 用紙の6桁の番号を入力してください',
+        'pension.win1': '第{round}回 ({date}) 1等番号',
+        'pension.bonusLabel': 'ボーナス番号（各組）',
+        'pension.mine': 'あなたの番号',
+        'pension.rank': '{rank}等当選！{prize}',
+        'pension.bonusWin': 'ボーナス当選！{prize}',
+        'pension.lose': '残念ながら当選していません',
+        'pension.note': '下の桁から一致した数で等級が決まります。正確な結果と当選金の受け取りは東行宝くじでご確認ください。',
+        'pension.prize1': '月700万ウォン × 20年',
+        'pension.prize2': '月100万ウォン × 10年',
+        'pension.prize3': '100万ウォン',
+        'pension.prize4': '10万ウォン',
+        'pension.prize5': '5万ウォン',
+        'pension.prize6': '5千ウォン',
+        'pension.prize7': '1千ウォン',
+        'pension.prizeBonus': '月100万ウォン × 10年',
         'fortune.tag': '{year}年生まれ · {zodiac} · {cIcon} {cName} · {element}の気',
         'fortune.score': '(ラッキー指数: {score}点)',
         'fortune.headline': '"今日はあなたの運命と数字が出会う日！"',
@@ -5296,6 +5521,129 @@
     }
 
     /* ========================================================
+       6-3. 연금복권720+ 번호로 당첨 확인
+       ======================================================== */
+    // 당첨번호는 data/pension720.json([회차, 날짜, 1등 조, 1등 6자리, 보너스 6자리]).
+    // 등수: 1등 조+6자리, 2등 6자리(조 다름), 3~7등 끝에서 5·4·3·2·1자리, 보너스 6자리(각 조, 등수와 따로).
+    // 당첨금은 회차마다 같아서 I18N 'pension.prize1~7', 'pension.prizeBonus'에 둔다.
+    const pensionBox = document.getElementById('pension-box');
+    const pensionLatest = document.getElementById('pension-latest');
+    const pensionRound = document.getElementById('pension-round');
+    const pensionGroup = document.getElementById('pension-group');
+    const pensionNumber = document.getElementById('pension-number');
+    const pensionResult = document.getElementById('pension-result');
+    let pensionDraws = null; // Map 회차 → 행
+    let pensionPromise = null;
+    let pensionState = { status: 'idle', check: null };
+
+    function loadPensionDraws() {
+      if (pensionDraws) return Promise.resolve(pensionDraws);
+      if (!pensionPromise) {
+        pensionPromise = fetch('/data/pension720.json', { cache: 'no-cache' })
+          .then(res => { if (!res.ok) throw new Error(res.status); return res.json(); })
+          .then(json => { pensionDraws = new Map(json.draws.map(row => [row[0], row])); return pensionDraws; })
+          .catch(err => { pensionPromise = null; throw err; });
+      }
+      return pensionPromise;
+    }
+
+    function pensionRankOf(group, number, draw) {
+      const [, , wGroup, wNum, bonus] = draw;
+      let rank = 0;
+      if (number === wNum) rank = group === wGroup ? 1 : 2;
+      else {
+        for (let k = 5; k >= 1; k--) {
+          if (number.slice(-k) === wNum.slice(-k)) { rank = 8 - k; break; } // 끝 5자리=3등 … 끝 1자리=7등
+        }
+      }
+      return { rank, bonus: number === bonus };
+    }
+
+    function pensionDigitsHtml(number, hitFromRight, groupText, groupHit) {
+      const digits = number.split('').map((d, i) =>
+        `<span class="pension-digit${i >= 6 - hitFromRight ? ' hit' : ''}">${d}</span>`).join('');
+      return (groupText ? `<span class="pension-digit group${groupHit ? ' hit' : ''}">${groupText}</span>` : '') + digits;
+    }
+
+    function renderPension() {
+      const s = pensionState.status;
+      // 조 목록은 언어에 따라 글자가 바뀐다
+      const curGroup = pensionGroup.value || '1';
+      pensionGroup.innerHTML = [1, 2, 3, 4, 5].map(n => `<option value="${n}">${t('pension.group', { n })}</option>`).join('');
+      pensionGroup.value = curGroup;
+
+      if (s === 'loading' || s === 'idle') {
+        pensionLatest.textContent = s === 'loading' ? t('pension.loading') : '';
+        return;
+      }
+      if (s === 'error') {
+        pensionLatest.textContent = t('pension.loadError');
+        return;
+      }
+
+      const latest = pensionDraws.get(Math.max(...pensionDraws.keys()));
+      pensionLatest.textContent = t('pension.latest', { round: latest[0], date: latest[1], group: latest[2], number: latest[3], bonus: latest[4] });
+      if (!pensionRound.options.length) {
+        const rounds = [...pensionDraws.keys()].sort((a, b) => b - a);
+        pensionRound.innerHTML = rounds.map(r => `<option value="${r}"></option>`).join('');
+      }
+      [...pensionRound.options].forEach(opt => {
+        const d = pensionDraws.get(Number(opt.value));
+        opt.textContent = t('pension.round', { round: d[0], date: d[1] });
+      });
+
+      const c = pensionState.check;
+      if (!c) { pensionResult.innerHTML = ''; return; }
+      const draw = pensionDraws.get(c.round);
+      if (!draw) { pensionResult.innerHTML = ''; return; }
+      const { rank, bonus } = pensionRankOf(c.group, c.number, draw);
+      const hitDigits = rank === 0 ? 0 : (rank <= 2 ? 6 : 8 - rank);
+      const groupLabel = n => t('pension.group', { n });
+
+      let html = `<div class="pension-line"><span class="label">${t('pension.win1', { round: draw[0], date: draw[1] })}</span>${pensionDigitsHtml(draw[3], 0, groupLabel(draw[2]), false)}</div>`;
+      html += `<div class="pension-line"><span class="label">${t('pension.bonusLabel')}</span>${pensionDigitsHtml(draw[4], 0)}</div>`;
+      html += `<div class="pension-line"><span class="label">${t('pension.mine')}</span>${pensionDigitsHtml(c.number, hitDigits, groupLabel(c.group), rank === 1)}</div>`;
+      const wins = [];
+      if (rank) wins.push(t('pension.rank', { rank, prize: t(`pension.prize${rank}`) }));
+      if (bonus) wins.push(t('pension.bonusWin', { prize: t('pension.prizeBonus') }));
+      html += wins.length
+        ? `<div class="pension-summary win">🎉 ${wins.join(' · ')}</div>`
+        : `<div class="pension-summary">${t('pension.lose')}</div>`;
+      html += `<p class="pension-note">${t('pension.note')}</p>`;
+      pensionResult.innerHTML = html;
+    }
+
+    pensionBox.addEventListener('toggle', () => {
+      if (!pensionBox.open || pensionDraws) return;
+      pensionState = { ...pensionState, status: 'loading' };
+      renderPension();
+      loadPensionDraws()
+        .then(() => { pensionState = { ...pensionState, status: 'ready' }; renderPension(); })
+        .catch(() => { pensionState = { ...pensionState, status: 'error' }; renderPension(); });
+    });
+
+    pensionNumber.addEventListener('input', () => {
+      const v = pensionNumber.value.replace(/\D/g, '').slice(0, 6);
+      if (v !== pensionNumber.value) pensionNumber.value = v;
+    });
+    pensionNumber.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btn-pension-check').click(); });
+
+    document.getElementById('btn-pension-check').addEventListener('click', () => {
+      if (!pensionDraws) return;
+      const number = pensionNumber.value;
+      if (!/^\d{6}$/.test(number)) {
+        showToast(t('pension.needNumber'));
+        pensionNumber.focus();
+        return;
+      }
+      pensionState = { ...pensionState, check: { round: Number(pensionRound.value), group: Number(pensionGroup.value), number } };
+      renderPension();
+      playPopSound(600);
+    });
+
+    renderPension();
+
+    /* ========================================================
        8. 언어 적용
        ======================================================== */
     const langButtons = document.querySelectorAll('.lang-btn');
@@ -5325,6 +5673,7 @@
       renderTarotResult();
       renderContactStatus();
       renderQr();
+      renderPension();
 
       try { localStorage.setItem('app-lang', currentLang); } catch (e) {}
     }
